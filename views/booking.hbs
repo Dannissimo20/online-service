@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Example</title>
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .flex{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3px;
+        }
+        .header{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 40px;
+            margin-top: 24px;
+            position: relative;
+            margin-bottom: 28px;
+            >a{
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                right: 16px;
+            }
+        }
+        #header-title {
+
+            text-align: center;
+            font-size: 24px;
+            font-weight: 700;
+            line-height: 20px;
+            text-transform: capitalize;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
+        }
+
+        .swiper-container {
+            width: 100%;
+            height: 82px;
+            margin-bottom: 20px;
+            padding-left: 16px;
+            padding-right: 16px;
+            overflow: hidden;
+        }
+        .swiper-slide {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #FFFFFF;
+            border-radius: 8px;
+            border: 1px solid #d4d4d4;
+            height: 82px;
+            width: 60px;
+            cursor: pointer;
+        }
+        .swiper-slide.active {
+            background-color: #00A3AD;
+            color: #fff;
+            .time, .day_wrapper .day, .day_wrapper .date{
+                color: #ffffff;
+            }
+        }
+        .day_wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            user-select: none;
+            justify-content: center;
+        }
+        .day {
+            text-transform: capitalize;
+            font-size: 15px;
+            font-weight: 400;
+            text-align: center;
+            line-height: 20px;
+            color: #000;
+            margin-bottom: 4px;
+        }
+        .date {
+            font-size: 16px;
+            font-weight: 700;
+            text-align: center;
+            line-height: 20px;
+            color: #000;
+        }
+        .swiper-slide_time{
+            width: 88px;
+            min-width: 88px;
+            height: 40px;
+            border-radius: 8px;
+            border: 1px solid #E7E7E7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            .time{
+                font-size: 14px;
+                font-weight: 400;
+                line-height: 20px;
+                text-align: center;
+                color: #000000;
+            }
+        }
+        .tebs_wrapper{
+            border-top: 1px solid #D4D4D4;
+            padding-top: 20px;
+
+            margin-bottom: 20px;
+
+            .tabs {
+                display: flex;
+                background: #F3F3F3;
+                max-width: 240px;
+                border-radius: 8px;
+                margin: 0 auto 26px;
+                padding: 4px 3px;
+                justify-content: space-around;
+                .tab {
+                    padding: 10px;
+                    cursor: pointer;
+                    flex: 1;
+                    text-align: center;
+                    user-select: none;
+                    font-size: 14px;
+                    color: #767676;
+                    line-height: 18px;
+                    font-weight: 400;
+                    &.active {
+                        box-shadow: 0px 3px 8px 0px #0000001F;
+                        border: 0.5px solid #0000000A;
+                        background: #ffffff;
+                        border-radius: 8px;
+                        color: #000000;
+                    }
+                }
+
+            }
+        }
+        .time-slider-container {
+            margin-bottom: 20px;
+            .time-swiper{
+                height: 40px;
+                margin-bottom: 26px;
+            }
+        }
+        .service{
+            padding: 0 16px;
+            background: #f3f3f3;
+            margin: 0 16px;
+            .services{
+                &:first-child{
+                    padding-top: 16px;
+                }
+                .service_name, .service_price{
+                    font-size: 16px;
+                    line-height: 20px;
+                    font-weight: 600;
+                    color: #171717;
+                }
+                .service_options{
+                    display: flex;
+                    flex-direction: column;
+                    align-items: flex-end;
+                }
+
+            }
+            h3{
+                font-size: 14px;
+                line-height: 20px;
+                text-align: right;
+                font-weight: 400;
+                color: #888888;
+            }
+            .employee{
+                padding-top: 22px;
+                padding-bottom: 5px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                border-top: 1px solid #E7E7E7;
+                >p{
+                    font-size: 14px;
+                    line-height: 20px;
+                    font-weight: 400;
+                    color: #888888;
+                    >span{
+                        color: #000000;
+                    }
+                }
+                >a{
+                    width: 93px;
+                    height: 30px;
+                    text-align: center;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    text-decoration: none;
+                    border: 1px solid #e7e7e7;
+                    border-radius: 8px;
+                    background: #ffffff;
+                    font-size: 14px;
+                    font-weight: 400;
+                    line-height: 20px;
+                    color: #000000;
+                }
+            }
+        }
+        .add_service_button{
+            padding: 26px 16px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #D4D4D4;
+            button{
+                border: none;
+                outline: none;
+                background: transparent;
+                >a{
+                    text-decoration: none;
+                    color: #1795B2;
+                    font-size: 16px;
+                    line-height: 20px;
+                    font-weight: 600;
+                }
+            }
+        }
+        .summary_wrapper{
+            display: flex;
+            margin: 16px;
+            height: 56px;
+            align-items: center;
+            justify-content: flex-end;
+            .summary_title{
+                margin-right: 24px;
+                color: #171717;
+                position: relative;
+                top: -15px;
+                font-size: 14px;
+                line-height: 20px;
+                font-weight: 400;
+            }
+            .summary{
+                display: flex;
+                flex-direction: column;
+                align-items: flex-end;
+                >h3{
+                    color: #171717;
+                    font-size: 28px;
+                    margin-top: 1px;
+                    line-height: 20px;
+                    font-weight: 700;
+                    margin-bottom: 7px;
+                }
+                p{
+                    font-size: 14px;
+                    line-height: 20px;
+                    font-weight: 400;
+                    color: #919191;
+                }
+            }
+        }
+        .next_button{
+            margin: 0 16px;
+            height: 47px;
+            background: #008BAA;
+            border: 1px solid #0000001A;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            line-height: 23px;
+            color: #ffffff;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1 id="header-title">Example</h1>
+        <a href="/">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M0.307538 0.307538C0.717588 -0.102513 1.38241 -0.102513 1.79246 0.307538L7 5.51508L12.2075 0.307538C12.6176 -0.102513 13.2824 -0.102513 13.6925 0.307538C14.1025 0.717588 14.1025 1.38241 13.6925 1.79246L8.48492 7L13.6925 12.2075C14.1025 12.6176 14.1025 13.2824 13.6925 13.6925C13.2824 14.1025 12.6176 14.1025 12.2075 13.6925L7 8.48492L1.79246 13.6925C1.38241 14.1025 0.717588 14.1025 0.307538 13.6925C-0.102513 13.2824 -0.102513 12.6176 0.307538 12.2075L5.51508 7L0.307538 1.79246C-0.102513 1.38241 -0.102513 0.717588 0.307538 0.307538Z" fill="#171717"/>
+            </svg>
+
+        </a>
+    </div>
+
+    <div class="swiper-container day-swiper">
+        <div class="swiper-wrapper"></div>
+    </div>
+
+    <div class="tebs_wrapper">
+        <div class="tabs">
+            <div class="tab" data-time="morning">Утро</div>
+            <div class="tab" data-time="day">День</div>
+            <div class="tab" data-time="evening">Вечер</div>
+        </div>
+    </div>
+
+    <div class="time-slider-container">
+        <div class="swiper-container time-swiper">
+            <div class="swiper-wrapper"></div>
+        </div>
+    </div>
+    <div id="selected-time" style="text-align: center; font-size: 16px; margin-bottom: 20px;"></div>
+
+    <div class="service">
+        <div class="services"></div>
+        <h3></h3>
+        <div class="employee">
+
+            <p>Сотрудник <span>Любой сотрудник</span></p>
+            <a href="/employee">Изменить</a>
+        </div>
+    </div>
+
+    <div class="add_service_button">
+        <button ><a href="/">Добавить другую услугу</a></button>
+    </div>
+
+    <div class="summary_wrapper">
+        <p class="summary_title">Итого :</p>
+        <div class="summary">
+            <h3>12.00</h3>
+            <p></p>
+        </div>
+    </div>
+    <a class="next_button">Продолжить</a>
+</div>
+
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const daySwiperWrapper = document.querySelector('.day-swiper .swiper-wrapper');
+        const timeSwiperWrapper = document.querySelector('.time-swiper .swiper-wrapper');
+        const tabs = document.querySelectorAll('.tab');
+        const headerTitle = document.getElementById('header-title');
+        const employeeTimeElement = document.querySelector('.service h3');
+        const summaryDuration = document.querySelector('.summary p')
+        const summaryTotalPrice = document.querySelector('.summary h3');
+        const today = new Date();
+        // Интервал времени
+        const INTERVAL = 5;
+        // Время начала
+        const TIME_START = 10;
+        // Время окончания
+        const TIME_END = 20;
+
+        const currencyFormatter = new Intl.NumberFormat('ru-RU', {
+            style: 'currency',
+            currency: 'RUB',
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+
+        function calculateTotalDuration(services) {
+            return services.reduce((total, service) => total + parseInt(service.duration, 10), 0);
+        }
+        function calculateTotalPrice(services) {
+            return services.reduce((total, service) => total + parseFloat(service.price), 0);
+        }
+
+        function addMinutesToTime(startTime, minutesToAdd) {
+            const [hours, minutes] = startTime.split(':').map(Number);
+            const startDate = new Date();
+            startDate.setHours(hours, minutes, 0);
+
+            const endDate = new Date(startDate.getTime() + minutesToAdd * 60000);
+
+            const endHours = endDate.getHours().toString().padStart(2, '0');
+            const endMinutes = endDate.getMinutes().toString().padStart(2, '0');
+
+            return `${endHours}:${endMinutes}`;
+        }
+
+        const services = [
+            { name: "Услуга 1", price: "12.00", duration: "90" },
+            { name: "Услуга 2", price: "15.00", duration: "45"},
+
+        ];
+
+        const days = [
+            new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1),
+            new Date(today.getFullYear(), today.getMonth(), today.getDate() + 3),
+            new Date(today.getFullYear(), today.getMonth(), today.getDate() + 5),
+            new Date(today.getFullYear(), today.getMonth(), today.getDate() + 7),
+            new Date(today.getFullYear(), today.getMonth(), today.getDate() + 9)
+        ];
+
+        const totalMinutes = calculateTotalDuration(services);
+        const totalPrice = calculateTotalPrice(services);
+
+        const textNode = document.createTextNode(`${totalMinutes} мин`);
+        summaryDuration.appendChild(textNode);
+
+        const formattedTotalPrice = currencyFormatter.format(totalPrice);
+        summaryTotalPrice.textContent = formattedTotalPrice;
+
+        function formatDate(date) {
+            const options = { weekday: 'short', day: '2-digit' };
+            return new Intl.DateTimeFormat('ru-RU', options).format(date);
+        }
+
+        function formatMonthYear(date) {
+            const options = { month: 'long', year: 'numeric' };
+            return new Intl.DateTimeFormat('ru-RU', options).format(date);
+        }
+
+        function formatTime(date) {
+            const options = { hour: '2-digit', minute: '2-digit' };
+            return new Intl.DateTimeFormat('ru-RU', options).format(date);
+        }
+
+        function generateTimes(startHour, endHour, interval) {
+            const times = [];
+            const startTime = new Date(today);
+            startTime.setHours(startHour, 0, 0, 0);
+            const endTime = new Date(today);
+            endTime.setHours(endHour, 0, 0, 0);
+
+            while (startTime <= endTime) {
+                times.push(new Date(startTime));
+                startTime.setMinutes(startTime.getMinutes() + interval);
+            }
+            return times;
+        }
+
+        const times = generateTimes(TIME_START, TIME_END, INTERVAL);
+
+        days.forEach(day => {
+            const formattedDate = formatDate(day);
+            const [dayOfWeek, dayOfMonth] = formattedDate.split(',');
+
+            const dayElement = document.createElement('div');
+            dayElement.className = 'swiper-slide swiper-slide_date';
+            dayElement.setAttribute('data-date', day.toISOString());
+            dayElement.innerHTML = `<div class="day_wrapper">
+                                        <div class="day">${dayOfWeek}</div>
+                                        <div class="date">${dayOfMonth}</div>
+                                    </div>`;
+            daySwiperWrapper.appendChild(dayElement);
+        });
+
+        times.forEach(time => {
+            const formattedTime = formatTime(time);
+
+            const timeElement = document.createElement('div');
+            timeElement.className = 'swiper-slide swiper-slide_time';
+            timeElement.innerHTML = `<div class="day_wrapper">
+                                        <div class="time">${formattedTime}</div>
+                                    </div>`;
+            timeSwiperWrapper.appendChild(timeElement);
+        });
+
+        timeSwiperWrapper.addEventListener('click', (event) => {
+            const timeElement = event.target.closest('.swiper-slide_time');
+            if (timeElement) {
+                document.querySelectorAll('.swiper-slide_time').forEach(el => el.classList.remove('active'));
+                timeElement.classList.add('active');
+                const selectedTime = timeElement.querySelector('.time').textContent;
+                const endTime = addMinutesToTime(selectedTime, totalMinutes);
+                employeeTimeElement.textContent = `Выбрано время: ${selectedTime} - ${endTime}`;
+            }
+        });
+        daySwiperWrapper.addEventListener('click', (event) => {
+            const timeElement = event.target.closest('.swiper-slide_date');
+            if (timeElement) {
+                document.querySelectorAll('.swiper-slide_date').forEach(el => el.classList.remove('active'));
+                timeElement.classList.add('active');
+                const date = timeElement.getAttribute('data-date');
+                console.log(`Полная дата: ${new Date(date)}`);
+            }
+        });
+
+
+        const daySwiper = new Swiper('.day-swiper', {
+            slidesPerView: 'auto',
+            spaceBetween: 10,
+            initialSlide: 0,
+            on: {
+                init: () => {
+                    updateHeaderTitle(days[0]);
+                    console.log('Day Swiper initialized');
+                },
+                slideChange: () => {
+                    const activeIndex = daySwiper.activeIndex;
+                    updateHeaderTitle(days[activeIndex]);
+                }
+            }
+        });
+
+        const timeSwiper = new Swiper('.time-swiper', {
+            slidesPerView: 4,
+            spaceBetween: 10,
+            initialSlide: times.findIndex(time => time.getHours() === today.getHours() && time.getMinutes() === today.getMinutes()),
+            on: {
+                init: () => console.log('Time Swiper initialized')
+            }
+        });
+
+        function updateTabsBasedOnTime(time) {
+            const hour = time.getHours();
+            let activeTab = '';
+            if (hour >= 10 && hour < 12) {
+                activeTab = 'morning';
+            } else if (hour >= 12 && hour < 16) {
+                activeTab = 'day';
+            } else {
+                activeTab = 'evening';
+            }
+
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+                if (tab.dataset.time === activeTab) {
+                    tab.classList.add('active');
+                }
+            });
+        }
+
+        function updateHeaderTitle(date) {
+            const monthYear = formatMonthYear(date);
+            headerTitle.textContent = monthYear;
+        }
+
+        function scrollToTime(time) {
+            const slideIndex = times.findIndex(t => t.getTime() === time.getTime());
+            if (slideIndex !== -1) {
+                timeSwiper.slideTo(slideIndex);
+            }
+        }
+
+        function initActiveTabAndScroll() {
+            const currentTime = new Date();
+            updateTabsBasedOnTime(currentTime);
+            scrollToTime(currentTime);
+        }
+
+        initActiveTabAndScroll();
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', (event) => {
+                const timeOfDay = event.target.dataset.time;
+                let slideIndex = 0;
+                switch (timeOfDay) {
+                    case 'morning':
+                        slideIndex = times.findIndex(time => time.getHours() < 12);
+                        break;
+                    case 'day':
+                        slideIndex = times.findIndex(time => time.getHours() >= 12 && time.getHours() < 16);
+                        break;
+                    case 'evening':
+                        slideIndex = times.findIndex(time => time.getHours() >= 16);
+                        break;
+                }
+                if (slideIndex !== -1) {
+                    timeSwiper.slideTo(slideIndex);
+                }
+                updateTabsBasedOnTime(times[slideIndex]);
+            });
+        });
+
+        timeSwiper.on('slideChange', () => {
+            const activeIndex = timeSwiper.activeIndex;
+            const activeTime = times[activeIndex];
+            updateTabsBasedOnTime(activeTime);
+        });
+
+        const servicesContainer = document.querySelector('.services');
+
+        services.forEach(service => {
+            const serviceElement = document.createElement('div');
+            const formattedPrice = currencyFormatter.format(parseFloat(service.price));
+            serviceElement.innerHTML = `<div class="flex">
+                                            <h4 class="service_name">${service.name}</h4>
+                                            <div class="service_options">
+                                                <h4 class="service_price">${formattedPrice}</h4>
+                                            </div>
+                                        </div>
+                                       `;
+            servicesContainer.appendChild(serviceElement);
+        });
+    });
+</script>
+</body>
+</html>

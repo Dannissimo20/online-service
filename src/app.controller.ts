@@ -27,6 +27,18 @@ export class AppController {
     };
   }
 
+  @Get('/booking')
+  @Render('booking')
+  booking() {
+    return
+  }
+
+  @Get('/employee')
+  @Render('employee')
+  employee(){
+    return
+  }
+
   @Post('spam')
   @Redirect('/', 301)
   async spam(@Body () body: any){

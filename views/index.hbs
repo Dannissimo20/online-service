@@ -143,9 +143,13 @@
             align-items: center;
             justify-content: flex-end;
             flex: 0.3;
-            button{
+            a{
                 height: 30px;
                 margin-left: 12px;
+                text-decoration: none;
+                display: flex;
+                align-items: center;
+                justify-content: center;
                 width: 83px;
                 background: #00A3AD;
                 color: #fff;
@@ -299,7 +303,7 @@
                                 <p class="service-price">${service.tarif} ₽</p>
                                 <p class="service-duration">${service.duration} мин</p>
                             </div>
-                            <button>Записаться</button>
+                            <a href="/booking">Записаться</a>
                         </div>
                     </div>
                     `;
