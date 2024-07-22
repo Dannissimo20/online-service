@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendar View</title>
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background: #F5F6F8;
+        }
+        .image-wrapper{
+            height: 382px;
+            >img{
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+        }
+        .container {
+            width: 600px;
+            margin: 0 auto;
+        }
+        .wrapper{
+            border-radius: 24px 24px 0 0;
+            background: #fff;
+            position: relative;
+            top: -124px;
+            padding: 16px;
+
+        }
+        .header {
+            top: -52px;
+            position: relative;
+        }
+        .header-title{
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            >svg{
+                margin-left: 12px;
+            }
+        }
+        .logo {
+            width: 80px;
+            height: 80px;
+            background: purple;
+            border-radius: 50%;
+        }
+        .logo_title {
+            font-size: 32px;
+            line-height: 28px;
+            color: #484848;
+            margin-top: 8px;
+            margin-bottom: 8px;
+        }
+        .logo_description {
+            font-weight: 400;
+            font-size: 14px;
+            line-height: 20px;
+            color: #767676;
+        }
+
+        .service-items-container {
+            overflow: hidden;
+            position: relative;
+            max-width: 600px;
+            top: -30px;
+        }
+        .service-category-item {
+            user-select: none;
+            padding: 11px;
+            background-color: #008BAA;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+        }
+        .service-category-item p {
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 20px;
+            text-align: center;
+            color: #fff;
+        }
+
+        .service {
+            margin-top: 17px;
+            margin-bottom: 24px;
+        }
+        .service-category-title {
+            font-size: 22px;
+            line-height: 28px;
+            color: #383734;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            height: 62px;
+            border-radius: 10px;
+            transition: background-color 0.3s;
+        }
+        .service-category >div{
+            margin-bottom: 24px;
+        }
+        .service-title {
+            font-size: 16px;
+            line-height: 20px;
+            font-weight: 400;
+            color: #383734;
+        }
+        .service-description{
+            font-size: 14px;
+            line-height: 16px;
+            color: #171717B2;
+            font-weight: 400;
+        }
+        .service-price{
+            font-size: 14px;
+            line-height: 18px;
+            letter-spacing: 0.09px;
+            color: #383734;
+        }
+        .service-duration{
+            line-height: 16px;
+            letter-spacing: 0.08px;
+            font-size: 12px;
+            color: #A9A9A9;
+        }
+        .service-left{
+            display: flex;
+            flex-direction: column;
+            flex: 0.7
+        }
+        .service-right{
+            display: flex;
+            margin-top: 16px;
+            align-items: center;
+            justify-content: flex-end;
+            flex: 0.3;
+            button{
+                height: 30px;
+                margin-left: 12px;
+                width: 83px;
+                background: #00A3AD;
+                color: #fff;
+                border-radius: 7px;
+                text-align: center;
+                font-size: 12px;
+                font-weight: 600;
+                letter-spacing: 0.08px;
+                line-height: 16px;
+                outline: none;
+                cursor: pointer;
+                border: none
+            }
+        }
+        .service-category p {
+            margin: 5px 0;
+        }
+        .service-item{
+            display: flex;
+            align-items: flex-start;
+        }
+        .service-category-header{
+            display: flex;
+            cursor: pointer;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .service-category {
+            transition: max-height 0.5s ease, padding 0.5s ease;
+            overflow: hidden;
+            max-height: 0;
+            opacity: 0;
+        }
+        .service-category.expanded {
+            max-height: 500px;
+            opacity: 1;
+
+        }
+        .rotate-svg {
+            transform: rotate(180deg);
+        }
+        .toggle-svg{
+            transition: .5s ease;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="image-wrapper">
+        <img src="https://i.ibb.co/BgN4pg2/ea1da5c57048e7cc526a7242d376221e.jpg" alt="no-image" />
+    </div>
+   <div class="wrapper">
+       <div class="header">
+           <div class="logo"></div>
+           <div class="header-title">
+               <h1 class="logo_title">{{filial_name}}</h1>
+               <svg  width="20" height="12" viewBox="0 0 20 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                   <path fill-rule="evenodd" clip-rule="evenodd" d="M19.0685 0.945188C19.6543 1.53094 19.6543 2.48074 19.0685 3.06652L11.0685 11.0665C10.4827 11.6523 9.53293 11.6523 8.94715 11.0665L0.947159 3.06652C0.361364 2.48074 0.361364 1.53094 0.947159 0.945188C1.53294 0.359438 2.48269 0.359438 3.06847 0.945188L10.0078 7.88453L16.9472 0.945188C17.533 0.359438 18.4828 0.359438 19.0685 0.945188Z" fill="#AAAAAA"/>
+               </svg>
+
+           </div>
+           <p class="logo_description">{{filial_address}}</p>
+       </div>
+       <div class="service-items-container">
+           <div class="swiper-container">
+               <div class="swiper-wrapper" id="service-category-items"></div>
+           </div>
+       </div>
+       <div class="service" id="services-container"></div>
+   </div>
+</div>
+
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+<script>
+    const categories1 = [
+        { id: 'mens-haircuts', title: 'Мужские стрижки' },
+        { id: 'womens-haircuts', title: 'Женские стрижки' },
+        { id: 'manicure', title: 'Маникюр' },
+        { id: 'category4', title: 'Категория 4' },
+        { id: 'category3', title: 'Категория 3' },
+        { id: 'category2', title: 'Категория 2' },
+        { id: 'category1', title: 'Категория 1' }
+    ];
+
+    const services1 = [
+        { categoryId: 'mens-haircuts', name: 'Классическая стрижка', description: 'Описание текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст', price: '250', duration: '30' },
+        { categoryId: 'mens-haircuts', name: 'Модельная стрижка', description: 'Описание текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст', price: '250', duration: '30' },
+        { categoryId: 'mens-haircuts', name: 'Стрижка под машинку', description: 'Описание текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст', price: '250', duration: '30' },
+        { categoryId: 'womens-haircuts', name: 'Короткие стрижки', description: 'Описание текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст', price: '250', duration: '30' },
+        { categoryId: 'womens-haircuts', name: 'Средние стрижки', description: 'Описание текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст', price: '250', duration: '30' },
+        { categoryId: 'womens-haircuts', name: 'Длинные стрижки', description: 'Описание текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст', price: '250', duration: '30' },
+        { categoryId: 'manicure', name: 'Классический маникюр', description: 'Описание текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст', price: '250', duration: '30' },
+        { categoryId: 'manicure', name: 'Аппаратный маникюр', description: 'Описание текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст', price: '250', duration: '30' },
+        { categoryId: 'manicure', name: 'Гелевый маникюр', description: 'Описание текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст', price: '250', duration: '30' },
+        { categoryId: 'category4', name: 'Услуга 1', description: 'Описание текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст', price: '250', duration: '30' },
+        { categoryId: 'category4', name: 'Услуга 2', description: 'Описание текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст', price: '250', duration: '30' },
+        { categoryId: 'category4', name: 'Услуга 3', description: 'Описание текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст', price: '250', duration: '30' },
+        { categoryId: 'category3', name: 'Услуга 1', description: 'Описание текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст', price: '250', duration: '30' },
+        { categoryId: 'category3', name: 'Услуга 2', description: 'Описание текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст', price: '250', duration: '30' },
+        { categoryId: 'category3', name: 'Услуга 3', description: 'Описание текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст', price: '250', duration: '30' },
+        { categoryId: 'category2', name: 'Услуга 1', description: 'Описание текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст', price: '250', duration: '30' },
+        { categoryId: 'category2', name: 'Услуга 2', description: 'Описание текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст', price: '250', duration: '30' },
+        { categoryId: 'category2', name: 'Услуга 3', description: 'Описание текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст', price: '250', duration: '30' },
+        { categoryId: 'category1', name: 'Услуга 1', description: 'Описание текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст', price: '250', duration: '30' },
+        { categoryId: 'category1', name: 'Услуга 2', description: 'Описание текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст', price: '250', duration: '30' },
+        { categoryId: 'category1', name: 'Услуга 3', description: 'Описание текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст', price: '250', duration: '30' }
+    ];
+
+    const categories = {{{categories}}};
+    const services = {{{services}}};
+
+    function generateSwiperSlides() {
+        const swiperWrapper = document.getElementById('service-category-items');
+        categories.forEach(category => {
+            const slide = document.createElement('div');
+            slide.className = 'swiper-slide service-category-item';
+            slide.innerHTML = `<p>${category.name}</p>`;
+            swiperWrapper.appendChild(slide);
+        });
+    }
+
+    function generateServices() {
+        const container = document.getElementById('services-container');
+        categories.forEach(category => {
+            const categoryElement = document.createElement('div');
+            const titleElement = document.createElement('h1');
+            const servicesElement = document.createElement('div');
+
+            titleElement.innerHTML = `<div class="service-category-header">
+                                        <h1 class="service-category-title">${category.name}</h1>
+                                        <svg class="toggle-svg" width="20" height="11" viewBox="0 0 20 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M17.7388 10.5803C17.8863 10.7323 18.0862 10.8225 18.2979 10.8325C18.5095 10.8425 18.717 10.7714 18.8781 10.6339C19.0393 10.4963 19.1419 10.3025 19.1653 10.0919C19.1886 9.88136 19.1309 9.66978 19.0038 9.50026L18.9355 9.42109L11.0322 1.27109C10.7805 1.01002 10.439 0.85443 10.0769 0.83586C9.7148 0.81729 9.35917 0.937135 9.08216 1.17109L8.97716 1.26942L1.07216 9.42109C0.924114 9.57316 0.839672 9.77599 0.836058 9.98819C0.832445 10.2004 0.909932 10.406 1.05271 10.563C1.19549 10.72 1.3928 10.8167 1.60439 10.8332C1.81598 10.8497 2.0259 10.7849 2.19132 10.6519L2.26882 10.5811L10.0038 2.60442L17.7388 10.5803Z" fill="#C2C2C2"/>
+                                        </svg>
+                                      </div>`;
+            titleElement.setAttribute('onclick', `toggleCategory('${category.id}')`);
+
+            servicesElement.className = 'service-category expanded';
+            servicesElement.id = category.id;
+
+            services.filter(service => service.idparents=== category.id).forEach(service => {
+                const serviceElement = document.createElement('div');
+                serviceElement.innerHTML = `
+                    <div class="service-item">
+                        <div class="service-left">
+                            <p class="service-title">${service.name}</p>
+                            <p class="service-description">${service.comment}</p>
+                        </div>
+                        <div class="service-right">
+                            <div>
+                                <p class="service-price">${service.tarif} ₽</p>
+                                <p class="service-duration">${service.duration} мин</p>
+                            </div>
+                            <button>Записаться</button>
+                        </div>
+                    </div>
+                    `;
+                servicesElement.appendChild(serviceElement);
+            });
+
+            categoryElement.appendChild(titleElement);
+            categoryElement.appendChild(servicesElement);
+            container.appendChild(categoryElement);
+        });
+    }
+
+    function toggleCategory(categoryId) {
+        const categoryElement = document.getElementById(categoryId);
+        categoryElement.classList.toggle('expanded');
+        const svg = categoryElement.previousElementSibling.querySelector('svg');
+        svg.classList.toggle('rotate-svg');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        generateSwiperSlides();
+        generateServices();
+        const swiper = new Swiper('.swiper-container', {
+            spaceBetween: 20,
+            slidesPerView: 3.2,
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+        });
+    });
+</script>
+</body>
+</html>
