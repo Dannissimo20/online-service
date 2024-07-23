@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Example</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background: #00000040;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: auto;
+            display: flex;
+            flex-direction: column;
+            padding: 32px 20px;
+            max-width: 375px;
+            min-width: 375px;
+            text-align: left;
+            border-radius: 8px;
+            >h1{
+                font-size: 24px;
+                font-weight: 700;
+                line-height: 22px;
+                color: #000000;
+                margin-bottom: 13px;
+            }
+            >p{
+                color: #797979;
+                font-size: 14px;
+                line-height: 22px;
+                font-weight: 400;
+                margin-bottom: 8px;
+            }
+        }
+
+        #confirmExit, #cancelExit {
+            height: 48px;
+            width: 100%;
+            font-size: 16px;
+            font-weight: 700;
+            line-height: 14px;
+            cursor: pointer;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        #confirmExit {
+            background-color: #FFFFFF;
+            color: #2A2C32;
+            border: 1px solid #C7CBD4;
+        }
+
+        #cancelExit {
+            background-color: #008BAA;
+            border: 1px solid #008BAA;
+            color: white;
+            margin-top: 12px;
+            margin-bottom: 16px;
+        }
+        .flex{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3px;
+        }
+        .header {
+            position: relative;
+            display: flex;
+            margin-left: 16px;
+            margin-right: 16px;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 33px;
+            margin-bottom: 36px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
+        }
+        .service{
+            padding: 0 16px;
+            background: #f3f3f3;
+            border-radius: 8px;
+            margin: 0 16px;
+            .services{
+                &:first-child{
+                    padding-top: 16px;
+                }
+                .service_name, .service_price{
+                    font-size: 14px;
+                    line-height: 20px;
+                    font-weight: 400;
+                    color: #585858;
+                }
+                .service_price{
+                    font-weight: 600;
+                }
+                .service_options{
+                    display: flex;
+                    flex-direction: column;
+                    align-items: flex-end;
+                }
+
+            }
+            h3{
+                font-size: 14px;
+                line-height: 20px;
+                text-align: right;
+                font-weight: 400;
+                color: #888888;
+            }
+            .employee{
+                padding-bottom: 16px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                border-bottom: 1px solid #E7E7E7;
+                >p{
+                    font-size: 14px;
+                    line-height: 20px;
+                    font-weight: 400;
+                    color: #888888;
+                    >span{
+                        color: #585858;
+                    }
+                }
+                >a{
+                    width: 93px;
+                    height: 30px;
+                    text-align: center;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    text-decoration: none;
+                    border: 1px solid #e7e7e7;
+                    border-radius: 8px;
+                    background: #ffffff;
+                    font-size: 14px;
+                    font-weight: 400;
+                    line-height: 20px;
+                    color: #000000;
+                }
+            }
+        }
+        .summary_wrapper{
+            display: flex;
+            margin: 16px;
+            height: 56px;
+            flex-direction: column;
+            align-items: flex-end;
+            justify-content: center;
+            .summary_title{
+                color: #171717;
+                position: relative;
+                font-size: 14px;
+                margin-bottom: 5px;
+                line-height: 20px;
+                font-weight: 400;
+            }
+            .summary{
+                display: flex;
+                flex-direction: column;
+                align-items: flex-end;
+                >h3{
+                    color: #171717;
+                    font-size: 28px;
+                    margin-top: 1px;
+                    line-height: 20px;
+                    font-weight: 700;
+                    margin-bottom: 7px;
+                }
+            }
+            &.summary_service{
+                margin: 0 auto;
+                flex-direction: row;
+                align-items: center;
+                justify-content: flex-end;
+                .summary_title{
+                    color: #000000;
+                    font-size: 16px;
+                    line-height: 23px;
+                    font-weight: 400;
+                    margin: 0 5px 0 0;
+                    position: relative;
+                    top: 0;
+                }
+                .summary{
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    justify-content: flex-end;
+                    >h3{
+                        color: #000000;
+                        font-size: 16px;
+                        line-height: 23px;
+                        font-weight: 600;
+                        margin: 0;
+                    }
+                }
+            }
+        }
+        .next_button{
+            margin: 0 16px;
+            width: calc(100% - 32px);
+            height: 47px;
+            background: #008BAA;
+            border: 1px solid #0000001A;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            line-height: 23px;
+            color: #ffffff;
+            font-weight: 700;
+        }
+        .personal_data{
+            color: #767676;
+            font-size: 12px;
+            line-height: 20px;
+            font-weight: 400;
+            text-align: center;
+            max-width: 342px;
+            margin: 24px auto 0;
+            a{
+                color: #767676;
+            }
+        }
+        .summary_date{
+            margin-top: 50px;
+            margin-bottom: 26px;
+            h1{
+                font-size: 24px;
+                line-height: 20px;
+                font-weight: 400;
+                text-align: center;
+                margin-bottom: 8px;
+                color: #171717;
+                &.bold{
+                    font-weight: 700;
+                }
+            }
+            .logo_title{
+                color: #585858;
+                font-size: 14px;
+                line-height: 20px;
+                text-align: center;
+            }
+        }
+        form{
+            margin-top: 24px;
+        }
+        .input_field {
+            margin: 0 16px;
+            &.input_field_end{
+                padding-bottom: 32px;
+                border-bottom: 1px solid #E7E7E7
+            }
+        }
+        .input_text {
+            width: 100%;
+            height: 58px;
+            padding: 16px;
+            font-size: 16px;
+            line-height: 24px;
+            border: 1px solid #E7E7E7;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            color: #171717;
+            outline: none;
+            &::placeholder{
+                color: #757575;
+            }
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/inputmask/5.0.7/inputmask.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <div id="exitModal" class="modal">
+        <div class="modal-content">
+            <h1>Отменить бронирование?</h1>
+            <p>Действительно хотите прервать процесс? Несохраненные изменения будут потеряны.</p>
+            <button id="cancelExit">Продолжить запись</button>
+            <button id="confirmExit">Да, отменить</button>
+
+        </div>
+    </div>
+    <div class="header">
+        <a href="/booking">
+            <svg width="24" height="18" viewBox="0 0 24 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M22.5 9H1M1 9L8 17M1 9L8 1" stroke="#171717" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </a>
+        <a href="/booking" class="exit">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M0.307538 0.307538C0.717588 -0.102513 1.38241 -0.102513 1.79246 0.307538L7 5.51508L12.2075 0.307538C12.6176 -0.102513 13.2824 -0.102513 13.6925 0.307538C14.1025 0.717588 14.1025 1.38241 13.6925 1.79246L8.48492 7L13.6925 12.2075C14.1025 12.6176 14.1025 13.2824 13.6925 13.6925C13.2824 14.1025 12.6176 14.1025 12.2075 13.6925L7 8.48492L1.79246 13.6925C1.38241 14.1025 0.717588 14.1025 0.307538 13.6925C-0.102513 13.2824 -0.102513 12.6176 0.307538 12.2075L5.51508 7L0.307538 1.79246C-0.102513 1.38241 -0.102513 0.717588 0.307538 0.307538Z" fill="#171717"/>
+            </svg>
+
+        </a>
+    </div>
+    <div class="summary_date">
+        <h1 class="bold">Вторник, 23 Июля 2024</h1>
+        <h1>10:30 - 11:00 (30 мин.)</h1>
+        <h3 class="logo_title">{{filial_name}}</h3>
+
+    </div>
+    <div class="service">
+        <div class="services"></div>
+        <h3></h3>
+        <div class="employee">
+
+            <p>Сотрудник <span>Любой сотрудник</span></p>
+            <p>10:30 - 11:00</p>
+        </div>
+        <div class="summary_wrapper summary_service">
+            <p class="summary_title">Всего: </p>
+            <div class="summary ">
+                <h3></h3>
+            </div>
+        </div>
+    </div>
+
+    <form>
+        <div class="input_field">
+            <input class="input_text" placeholder="Введите имя" type="text" id="name" name="name">
+        </div>
+        <div class="input_field input_field_end">
+            <input class="input_text phone" type="text" placeholder="Номер телефона" type="text" id="phone" name="phone">
+        </div>
+
+        <div class="summary_wrapper">
+            <p class="summary_title">Общая сумма к оплате</p>
+            <div class="summary summary_final">
+                <h3>323</h3>
+            </div>
+        </div>
+        <button class="next_button">Записаться</button>
+    </form>
+    <div class="personal_data">
+        <p>Нажимая кнопку записаться, вы даете согласие на обработку <a target="_blank" href="https://telebon.ru/document">персональных данных</a></p>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const summaryTotalPrice = document.querySelector('.summary h3');
+        const summaryTotalPrice1 = document.querySelector('.summary_final h3');
+        const modal = document.getElementById("exitModal");
+        const confirmExitBtn = document.getElementById("confirmExit");
+        const cancelExitBtn = document.getElementById("cancelExit");
+        const closeButton = document.querySelector('.header .exit');
+
+        const currencyFormatter = new Intl.NumberFormat('ru-RU', {
+            style: 'currency',
+            currency: 'RUB',
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+
+        function calculateTotalDuration(services) {
+            return services.reduce((total, service) => total + parseInt(service.duration, 10), 0);
+        }
+        function calculateTotalPrice(services) {
+            return services.reduce((total, service) => total + parseFloat(service.price), 0);
+        }
+
+        const services = [
+            { name: "Услуга 1", price: "12.00", duration: "90" },
+            { name: "Услуга 2", price: "15.00", duration: "45"},
+        ];
+
+        const totalPrice = calculateTotalPrice(services);
+
+
+        summaryTotalPrice.textContent = currencyFormatter.format(totalPrice);
+        summaryTotalPrice1.textContent = currencyFormatter.format(totalPrice);
+
+        closeButton.addEventListener('click', (event) => {
+            event.preventDefault();
+            modal.style.display = "flex";
+        });
+        confirmExitBtn.addEventListener('click', () => {
+            window.location.href = '/';
+        });
+        cancelExitBtn.addEventListener('click', () => {
+            modal.style.display = "none";
+        });
+        window.addEventListener('click', (event) => {
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        });
+
+        const servicesContainer = document.querySelector('.services');
+
+        services.forEach(service => {
+            const serviceElement = document.createElement('div');
+            const formattedPrice = currencyFormatter.format(parseFloat(service.price));
+            serviceElement.innerHTML = `<div class="flex">
+                                            <h4 class="service_name">${service.name}</h4>
+                                            <div class="service_options">
+                                                <h4 class="service_price">${formattedPrice}</h4>
+                                            </div>
+                                        </div>
+                                       `;
+            servicesContainer.appendChild(serviceElement);
+        });
+        var phoneInput = document.querySelector('.phone')
+        phoneInput.addEventListener('keydown', function(event) {
+            if( !(event.key == 'ArrowLeft' || event.key == 'ArrowRight' || event.key == 'Backspace' || event.key == 'Tab')) { event.preventDefault() }
+            var mask = '+7 (111) 111-11-11'; // Задаем маску
+
+            if (/[0-9\+\ \-\(\)]/.test(event.key)) {
+                // Здесь начинаем сравнивать this.value и mask
+                // к примеру опять же
+                var currentString = this.value;
+                var currentLength = currentString.length;
+                if (/[0-9]/.test(event.key)) {
+                    if (mask[currentLength] == '1') {
+                        this.value = currentString + event.key;
+                    } else {
+                        for (var i=currentLength; i<mask.length; i++) {
+                            if (mask[i] == '1') {
+                                this.value = currentString + event.key;
+                                break;
+                            }
+                            currentString += mask[i];
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
+</body>
+</html>

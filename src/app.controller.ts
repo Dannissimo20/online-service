@@ -23,7 +23,55 @@ export class AppController {
       categories: JSON.stringify(categories),
       services: JSON.stringify(services),
       filial_name: filial.name,
-      filial_address: address
+      filial_address: address,
+      filial_cover: filial.coverphoto,
+      filial_logo: filial.avatar
+    };
+  }
+
+  @Get('/service')
+  @HttpCode(222)
+  @Render('service')
+  async service() {
+    const categories = await this.appService.getCategories()
+    const services = await this.appService.getServices()
+    const filial = await this.appService.getFilialInfo()
+    let address = ""
+    let address_array = filial.address.split(';')
+    address_array.forEach(word => {
+      address += word + ', '
+    })
+    address = address.slice(0, -2)
+    return {
+      categories: JSON.stringify(categories),
+      services: JSON.stringify(services),
+      filial_name: filial.name,
+      filial_address: address,
+      filial_cover: filial.coverphoto,
+      filial_logo: filial.avatar
+    };
+  }
+
+  @Get('/summary')
+  @HttpCode(222)
+  @Render('summary')
+  async summary() {
+    const categories = await this.appService.getCategories()
+    const services = await this.appService.getServices()
+    const filial = await this.appService.getFilialInfo()
+    let address = ""
+    let address_array = filial.address.split(';')
+    address_array.forEach(word => {
+      address += word + ', '
+    })
+    address = address.slice(0, -2)
+    return {
+      categories: JSON.stringify(categories),
+      services: JSON.stringify(services),
+      filial_name: filial.name,
+      filial_address: address,
+      filial_cover: filial.coverphoto,
+      filial_logo: filial.avatar
     };
   }
 
