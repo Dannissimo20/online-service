@@ -78,7 +78,11 @@ export class AppController {
   @Get('/booking')
   @Render('booking')
   booking() {
-    return
+    return {
+      interval: 30,
+      time_start: 11,
+      time_end: 20
+    };
   }
 
   @Get('/employee')

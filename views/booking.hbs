@@ -400,7 +400,9 @@
             <a href="/employee">Изменить</a>
         </div>
     </div>
-
+    <button id="change-interval-button">Изменить интервал</button>
+    <button id="change-time-start-button">Изменить начало</button>
+    <button id="change-time-end-button">Изменить конец</button>
     <div class="add_service_button">
         <button ><a href="/service">Добавить другую услугу</a></button>
     </div>
@@ -423,19 +425,17 @@
         const tabs = document.querySelectorAll('.tab');
         const headerTitle = document.getElementById('header-title');
         const employeeTimeElement = document.querySelector('.service h3');
-        const summaryDuration = document.querySelector('.summary p')
+        const summaryDuration = document.querySelector('.summary p');
         const summaryTotalPrice = document.querySelector('.summary h3');
         const modal = document.getElementById("exitModal");
         const confirmExitBtn = document.getElementById("confirmExit");
         const cancelExitBtn = document.getElementById("cancelExit");
         const closeButton = document.querySelector('.header a');
         const today = new Date();
-        // Интервал времени
-        const INTERVAL = 5;
-        // Время начала
-        const TIME_START = 10;
-        // Время окончания
-        const TIME_END = 20;
+
+        let INTERVAL = 5;
+        let TIME_START = 10;
+        let TIME_END = 20;
 
         const currencyFormatter = new Intl.NumberFormat('ru-RU', {
             style: 'currency',
@@ -466,8 +466,7 @@
 
         const services = [
             { name: "Услуга 1", price: "12.00", duration: "90" },
-            { name: "Услуга 2", price: "15.00", duration: "45"},
-
+            { name: "Услуга 2", price: "15.00", duration: "45"}
         ];
 
         const days = [
@@ -516,7 +515,43 @@
             return times;
         }
 
-        const times = generateTimes(TIME_START, TIME_END, INTERVAL);
+        function renderTimeSlider() {
+            timeSwiperWrapper.innerHTML = '';
+            const times = generateTimes(TIME_START, TIME_END, INTERVAL);
+
+            times.forEach(time => {
+                const formattedTime = formatTime(time);
+
+                const timeElement = document.createElement('div');
+                timeElement.className = 'swiper-slide swiper-slide_time';
+                timeElement.innerHTML = `<div class="day_wrapper">
+                                                <div class="time">${formattedTime}</div>
+                                            </div>`;
+                timeSwiperWrapper.appendChild(timeElement);
+            });
+
+            const timeSwiper = new Swiper('.time-swiper', {
+                slidesPerView: 4,
+                spaceBetween: 10,
+                on: {
+                    init: () => console.log('Time Swiper initialized')
+                }
+            });
+
+            timeSwiperWrapper.addEventListener('click', (event) => {
+                const timeElement = event.target.closest('.swiper-slide_time');
+                if (timeElement) {
+                    document.querySelectorAll('.swiper-slide_time').forEach(el => el.classList.remove('active'));
+                    timeElement.classList.add('active');
+                    const selectedTime = timeElement.querySelector('.time').textContent;
+                    const endTime = addMinutesToTime(selectedTime, totalMinutes);
+                    employeeTimeElement.textContent = `Выбрано время: ${selectedTime} - ${endTime}`;
+                }
+            });
+        }
+
+
+        renderTimeSlider();
 
         days.forEach(day => {
             const formattedDate = formatDate(day);
@@ -526,35 +561,18 @@
             dayElement.className = 'swiper-slide swiper-slide_date';
             dayElement.setAttribute('data-date', day.toISOString());
             dayElement.innerHTML = `<div class="day_wrapper">
-                                        <div class="day">${dayOfWeek}</div>
-                                        <div class="date">${dayOfMonth}</div>
-                                    </div>`;
+                                            <div class="day">${dayOfWeek}</div>
+                                            <div class="date">${dayOfMonth}</div>
+                                        </div>`;
             daySwiperWrapper.appendChild(dayElement);
         });
 
-        times.forEach(time => {
-            const formattedTime = formatTime(time);
-
-            const timeElement = document.createElement('div');
-            timeElement.className = 'swiper-slide swiper-slide_time';
-            timeElement.innerHTML = `<div class="day_wrapper">
-                                        <div class="time">${formattedTime}</div>
-                                    </div>`;
-            timeSwiperWrapper.appendChild(timeElement);
-        });
-
-        timeSwiperWrapper.addEventListener('click', (event) => {
-            const timeElement = event.target.closest('.swiper-slide_time');
-            if (timeElement) {
-                document.querySelectorAll('.swiper-slide_time').forEach(el => el.classList.remove('active'));
-                timeElement.classList.add('active');
-                const selectedTime = timeElement.querySelector('.time').textContent;
-                const endTime = addMinutesToTime(selectedTime, totalMinutes);
-                employeeTimeElement.textContent = `Выбрано время: ${selectedTime} - ${endTime}`;
-            }
-        });
         daySwiperWrapper.addEventListener('click', (event) => {
             const timeElement = event.target.closest('.swiper-slide_date');
+            TIME_END = {{time_end}};
+            INTERVAL = {{interval}};
+            TIME_START = {{time_start}};
+            renderTimeSlider();
             if (timeElement) {
                 document.querySelectorAll('.swiper-slide_date').forEach(el => el.classList.remove('active'));
                 timeElement.classList.add('active');
@@ -592,15 +610,6 @@
                     const activeIndex = daySwiper.activeIndex;
                     updateHeaderTitle(days[activeIndex]);
                 }
-            }
-        });
-
-        const timeSwiper = new Swiper('.time-swiper', {
-            slidesPerView: 4,
-            spaceBetween: 10,
-            initialSlide: times.findIndex(time => time.getHours() === today.getHours() && time.getMinutes() === today.getMinutes()),
-            on: {
-                init: () => console.log('Time Swiper initialized')
             }
         });
 
@@ -677,12 +686,12 @@
             const serviceElement = document.createElement('div');
             const formattedPrice = currencyFormatter.format(parseFloat(service.price));
             serviceElement.innerHTML = `<div class="flex">
-                                            <h4 class="service_name">${service.name}</h4>
-                                            <div class="service_options">
-                                                <h4 class="service_price">${formattedPrice}</h4>
+                                                <h4 class="service_name">${service.name}</h4>
+                                                <div class="service_options">
+                                                    <h4 class="service_price">${formattedPrice}</h4>
+                                                </div>
                                             </div>
-                                        </div>
-                                       `;
+                                           `;
             servicesContainer.appendChild(serviceElement);
         });
     });
