@@ -318,8 +318,8 @@
         </a>
     </div>
     <div class="summary_date">
-        <h1 class="bold">Вторник, 23 Июля 2024</h1>
-        <h1>10:30 - 11:00 (30 мин.)</h1>
+        <h1 class="bold">{{day}}</h1>
+        <h1>{{time_start}} - {{time_end}} ({{duration}} мин.)</h1>
         <h3 class="logo_title">{{filial_name}}</h3>
 
     </div>
@@ -328,8 +328,8 @@
         <h3></h3>
         <div class="employee">
 
-            <p>Сотрудник <span>Любой сотрудник</span></p>
-            <p>10:30 - 11:00</p>
+            <p>Сотрудник <span>{{employee_fio}}</span></p>
+            <p>{{time_start}} - {{time_end}}</p>
         </div>
         <div class="summary_wrapper summary_service">
             <p class="summary_title">Всего: </p>
@@ -353,8 +353,8 @@
                 <h3>323</h3>
             </div>
         </div>
-        <button class="next_button">Записаться</button>
     </form>
+    <button class="next_button">Записаться</button>
     <div class="personal_data">
         <p>Нажимая кнопку записаться, вы даете согласие на обработку <a target="_blank" href="https://telebon.ru/document">персональных данных</a></p>
     </div>
@@ -368,6 +368,7 @@
         const confirmExitBtn = document.getElementById("confirmExit");
         const cancelExitBtn = document.getElementById("cancelExit");
         const closeButton = document.querySelector('.header .exit');
+        const nextButton = document.querySelector(".next_button");
 
         const currencyFormatter = new Intl.NumberFormat('ru-RU', {
             style: 'currency',
@@ -380,13 +381,10 @@
             return services.reduce((total, service) => total + parseInt(service.duration, 10), 0);
         }
         function calculateTotalPrice(services) {
-            return services.reduce((total, service) => total + parseFloat(service.price), 0);
+            return services.reduce((total, service) => total + parseFloat(service.tarif), 0);
         }
 
-        const services = [
-            { name: "Услуга 1", price: "12.00", duration: "90" },
-            { name: "Услуга 2", price: "15.00", duration: "45"},
-        ];
+        const services = {{{chosen_services}}}
 
         const totalPrice = calculateTotalPrice(services);
 
@@ -394,12 +392,15 @@
         summaryTotalPrice.textContent = currencyFormatter.format(totalPrice);
         summaryTotalPrice1.textContent = currencyFormatter.format(totalPrice);
 
+        nextButton.addEventListener("click", function() {
+            console.log("Кнопка была нажата");
+        });
         closeButton.addEventListener('click', (event) => {
             event.preventDefault();
             modal.style.display = "flex";
         });
         confirmExitBtn.addEventListener('click', () => {
-            window.location.href = '/';
+            window.location.href = '/exit';
         });
         cancelExitBtn.addEventListener('click', () => {
             modal.style.display = "none";
@@ -414,7 +415,7 @@
 
         services.forEach(service => {
             const serviceElement = document.createElement('div');
-            const formattedPrice = currencyFormatter.format(parseFloat(service.price));
+            const formattedPrice = currencyFormatter.format(parseFloat(service.tarif));
             serviceElement.innerHTML = `<div class="flex">
                                             <h4 class="service_name">${service.name}</h4>
                                             <div class="service_options">

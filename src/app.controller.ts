@@ -14,7 +14,6 @@ export class AppController {
   private chosen_time :any
 
   @Get()
-  @HttpCode(222)
   @Render('index')
   async root() {
     const categories = await this.appService.getCategories()
@@ -92,31 +91,31 @@ export class AppController {
 
   @Post('/booking/choose_time')
   async booking_time(@Body() body: any){
-    this.chosen_time = body.time+":00"
+    this.chosen_time = body.time
   }
 
 
   @Get('/summary')
-  @HttpCode(222)
   @Render('summary')
   async summary() {
-    const categories = await this.appService.getCategories()
-    const services = await this.appService.getServices()
     const filial = await this.appService.getFilialInfo()
-    let address = ""
-    let address_array = filial.address.split(';')
-    address_array.forEach(word => {
-      address += word + ', '
-    })
-    address = address.slice(0, -2)
+    const [hours, minutes] = this.chosen_time.split(":").map(Number);
+    const newHours = (hours + Math.floor((minutes + parseInt(this.chosen_services[0].duration)) / 60)) % 24;
+    const newMinutes = (minutes + parseInt(this.chosen_services[0].duration)) % 60;
     return {
-      categories: JSON.stringify(categories),
-      services: JSON.stringify(services),
+      chosen_services: JSON.stringify(this.chosen_services),
+      employee_fio: this.chosen_employee.fio,
       filial_name: filial.name,
-      filial_address: address,
-      filial_cover: filial.coverphoto,
-      filial_logo: filial.avatar
+      day: this.chosen_day.toLocaleDateString("ru-RU", {weekday: "long", day: "numeric", month: "long", year: "numeric"}),
+      time_start: this.chosen_time,
+      duration: this.chosen_services[0].duration,
+      time_end: `${newHours.toString().padStart(2, '0')}:${newMinutes.toString().padStart(2, '0')}`
     };
+  }
+
+  @Post('/summary/confirm')
+  async summary_confirm(@Body() body: any) {
+    console.log(body.phone)
   }
 
   @Get('/employee')
@@ -154,11 +153,5 @@ export class AppController {
     let res = await this.appService.spam(body.spam);
     if (res == undefined) return {message: 'spam sent'};
     else return {message: 'spam not sent'}
-  }
-
-  @Get(':id')
-  findOne(@Param() params: any){
-    console.log(params.id);
-    return {message:`This action returns a #${params.id} cat`, title: 'Cats'};
   }
 }
