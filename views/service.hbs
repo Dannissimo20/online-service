@@ -364,7 +364,7 @@
                                 <p class="service-price">${currencyFormatter.format(parseInt(service.tarif))}</p>
                                 <p class="service-duration">${service.duration} мин</p>
                             </div>
-                            <a href="/booking">Записаться</a>
+                            <a href="/choose_service/${service.id}">Добавить</a>
                         </div>
                     </div>
                     `;
@@ -388,7 +388,7 @@
         modal.style.display = "flex";
     });
     confirmExitBtn.addEventListener('click', () => {
-        window.location.href = '/';
+        window.location.href = '/exit';
     });
     cancelExitBtn.addEventListener('click', () => {
         modal.style.display = "none";

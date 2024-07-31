@@ -278,14 +278,14 @@
                     <div class="service-item">
                         <div class="service-left">
                             <p class="service-title">${service.name}</p>
-                            ${serviceComment}
+                            ${service.comment}
                         </div>
                         <div class="service-right">
                             <div>
                                 <p class="service-price">${currencyFormatter.format(parseInt(service.tarif))}</p>
                                 <p class="service-duration">${service.duration} мин</p>
                             </div>
-                            <a href="/booking">Записаться</a>
+                            <a href="/choose_service/${service.id}">Записаться</a>
                         </div>
                     </div>
                     `;

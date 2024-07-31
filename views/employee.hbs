@@ -150,20 +150,22 @@
 </div>
 
 <script>
-    const employees = [
-        {
-            id: '1233',
-            name: "Илья Сергеев",
-            role: "Барбер",
-            status: "Доступен",
-            image: "https://images.unsplash.com/photo-1721406769891-f2ba651401d9?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-        },
-        {
-            id: '1213',
-            name: "Сергей Сергеевич",
-            status: "Доступен",
-        }
-    ];
+    // const employees = [
+    //     {
+    //         id: '1233',
+    //         fio: "Илья Сергеев",
+    //         position: "Барбер",
+    //         status: "Доступен",
+    //         avatar: "https://images.unsplash.com/photo-1721406769891-f2ba651401d9?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    //     },
+    //     {
+    //         id: '1213',
+    //         fio: "Сергей Сергеевич",
+    //         status: "Доступен",
+    //     }
+    // ];
+
+    const employees = {{{employees}}};
 
     const employeeList = document.querySelector('.employee-list');
 
@@ -172,15 +174,15 @@
         li.dataset.id = employee.id;
         let imageContent = '';
         let employeeRole = ''
-        if (employee.image) {
-            imageContent = `<img src="${employee.image}" alt="${employee.name}">`;
+        if (employee.avatar) {
+            imageContent = `<img src="${employee.avatar}" alt="${employee.fio}">`;
         } else {
             imageContent = `<svg width="24" height="26" viewBox="0 0 24 26" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M12 14.0837C18.6276 14.0837 24 19.0509 24 25.1786C24 25.6325 23.6028 26 23.112 26C22.6212 26 22.224 25.6325 22.224 25.1786C22.224 19.9574 17.6472 15.7253 12 15.7253C6.3528 15.7253 1.776 19.9574 1.776 25.1798C1.776 25.6325 1.3788 26 0.888 26C0.3972 26 0 25.6325 0 25.1786C0 19.0509 5.3724 14.0837 12 14.0837ZM11.6052 1.85079e-06C13.2351 -0.0012525 14.7988 0.635136 15.9523 1.7692C17.1059 2.90327 17.7548 4.44214 17.7564 6.04737C17.7548 7.65259 17.1059 9.19146 15.9523 10.3255C14.7988 11.4596 13.2351 12.096 11.6052 12.0947C9.97528 12.096 8.4116 11.4596 7.25806 10.3255C6.10452 9.19146 5.45559 7.65259 5.454 6.04737C5.45559 4.44214 6.10452 2.90327 7.25806 1.7692C8.4116 0.635136 9.97528 -0.0012525 11.6052 1.85079e-06ZM11.6052 1.66637C11.0206 1.6659 10.4415 1.77885 9.90122 1.99876C9.3609 2.21868 8.86985 2.54125 8.45611 2.94806C8.04237 3.35488 7.71404 3.83796 7.48987 4.36974C7.26569 4.90152 7.15007 5.47158 7.1496 6.04737C7.15007 6.62315 7.26569 7.19321 7.48987 7.72499C7.71404 8.25677 8.04237 8.73985 8.45611 9.14667C8.86985 9.55348 9.3609 9.87606 9.90122 10.096C10.4415 10.3159 11.0206 10.4288 11.6052 10.4284C12.1899 10.429 12.7691 10.3162 13.3096 10.0963C13.85 9.87646 14.3412 9.55392 14.7551 9.14709C15.1689 8.74026 15.4974 8.25712 15.7216 7.72526C15.9459 7.1934 16.0615 6.62325 16.062 6.04737C16.0615 5.47138 15.9458 4.90113 15.7215 4.3692C15.4972 3.83726 15.1686 3.35407 14.7546 2.94723C14.3407 2.54038 13.8493 2.21786 13.3087 1.99808C12.7681 1.77831 12.19 1.66559 11.6052 1.66637Z" fill="#E6E6E6"/>
                 </svg>`;
         }
-        if (employee.role) {
-            employeeRole = `<div class="employee-role">${employee.role}<span class="dot">•</span></div>`;
+        if (employee.position) {
+            employeeRole = `<div class="employee-role">${employee.position}<span class="dot">•</span></div>`;
         } else {
             employeeRole = ``;
         }
@@ -194,7 +196,7 @@
                ${imageContent}
             </div>
             <div class="employee-details">
-                <div class="employee-name">${employee.name}</div>
+                <div class="employee-name">${employee.fio}</div>
                 <div class="details_wrapper">
                     ${employeeRole}
 

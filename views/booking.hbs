@@ -396,14 +396,14 @@
         <h3></h3>
         <div class="employee">
 
-            <p>Сотрудник <span>Любой сотрудник</span></p>
-            <a href="/employee">Изменить</a>
+            <p>Сотрудник <span>{{employee_fio}}</span></p>
+<!--            <a href="/employee">Изменить</a>-->
         </div>
     </div>
 
-    <div class="add_service_button">
-        <button ><a href="/service">Добавить другую услугу</a></button>
-    </div>
+<!--    <div class="add_service_button">-->
+<!--        <button ><a href="/service">Добавить другую услугу</a></button>-->
+<!--    </div>-->
 
     <div class="summary_wrapper">
         <p class="summary_title">Итого :</p>
@@ -429,13 +429,14 @@
         const confirmExitBtn = document.getElementById("confirmExit");
         const cancelExitBtn = document.getElementById("cancelExit");
         const closeButton = document.querySelector('.header a');
+        const servicesContainer = document.querySelector('.services');
         const today = new Date();
         // Интервал времени
-        const INTERVAL = 5;
+        let INTERVAL = 30;
         // Время начала
-        const TIME_START = 10;
+        let TIME_START = 10;
         // Время окончания
-        const TIME_END = 20;
+        let TIME_END = 20;
 
         const currencyFormatter = new Intl.NumberFormat('ru-RU', {
             style: 'currency',
@@ -448,7 +449,7 @@
             return services.reduce((total, service) => total + parseInt(service.duration, 10), 0);
         }
         function calculateTotalPrice(services) {
-            return services.reduce((total, service) => total + parseFloat(service.price), 0);
+            return services.reduce((total, service) => total + parseFloat(service.tarif), 0);
         }
 
         function addMinutesToTime(startTime, minutesToAdd) {
@@ -464,19 +465,35 @@
             return `${endHours}:${endMinutes}`;
         }
 
-        const services = [
-            { name: "Услуга 1", price: "12.00", duration: "90" },
-            { name: "Услуга 2", price: "15.00", duration: "45"},
+        // const services = [
+        //     { name: "Услуга 1", tarif: "12.00", duration: "90" },
+        //     { name: "Услуга 2", tarif: "15.00", duration: "45"},
+        //
+        // ];
+        const services = {{{chosen_services}}}
 
-        ];
-
-        const days = [
-            new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1),
-            new Date(today.getFullYear(), today.getMonth(), today.getDate() + 3),
-            new Date(today.getFullYear(), today.getMonth(), today.getDate() + 5),
-            new Date(today.getFullYear(), today.getMonth(), today.getDate() + 7),
-            new Date(today.getFullYear(), today.getMonth(), today.getDate() + 9)
-        ];
+        // const days = [
+        //     new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1),
+        //     new Date(today.getFullYear(), today.getMonth(), today.getDate() + 3),
+        //     new Date(today.getFullYear(), today.getMonth(), today.getDate() + 5),
+        //     new Date(today.getFullYear(), today.getMonth(), today.getDate() + 7),
+        //     new Date(today.getFullYear(), today.getMonth(), today.getDate() + 9),
+        //     new Date(today.getFullYear(), today.getMonth(), today.getDate() + 11),
+        //     new Date(today.getFullYear(), today.getMonth(), today.getDate() + 13),
+        //     new Date(today.getFullYear(), today.getMonth(), today.getDate() + 15),
+        //     new Date(today.getFullYear(), today.getMonth(), today.getDate() + 17),
+        //     new Date(today.getFullYear(), today.getMonth(), today.getDate() + 19),
+        //     new Date(today.getFullYear(), today.getMonth(), today.getDate() + 21),
+        //     new Date(today.getFullYear(), today.getMonth(), today.getDate() + 23),
+        //     new Date(today.getFullYear(), today.getMonth(), today.getDate() + 25),
+        //     new Date(today.getFullYear(), today.getMonth(), today.getDate() + 27),
+        //     new Date(today.getFullYear(), today.getMonth(), today.getDate() + 29),
+        //     new Date(today.getFullYear(), today.getMonth(), today.getDate() + 31),
+        // ];
+        const days1 = {{{days}}}
+        const days = days1.map(day => {
+            return new Date(day)
+        })
 
         const totalMinutes = calculateTotalDuration(services);
         const totalPrice = calculateTotalPrice(services);
@@ -516,7 +533,80 @@
             return times;
         }
 
-        const times = generateTimes(TIME_START, TIME_END, INTERVAL);
+        function renderService(){
+            services.forEach(service => {
+                const serviceElement = document.createElement('div');
+                const formattedPrice = currencyFormatter.format(parseFloat(service.tarif));
+                serviceElement.innerHTML = `<div class="flex">
+                                                <h4 class="service_name">${service.name}</h4>
+                                                <div class="service_options">
+                                                    <h4 class="service_price">${formattedPrice}</h4>
+                                                </div>
+                                            </div>
+                                           `;
+                servicesContainer.appendChild(serviceElement);
+            });
+        }
+
+        function renderTimeSlider() {
+            timeSwiperWrapper.innerHTML = '';
+            const times = generateTimes(TIME_START, TIME_END, INTERVAL);
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', (event) => {
+                    const timeOfDay = event.target.dataset.time;
+                    let slideIndex = 0;
+                    switch (timeOfDay) {
+                        case 'morning':
+                            slideIndex = times.findIndex(time => time.getHours() < 12);
+                            break;
+                        case 'day':
+                            slideIndex = times.findIndex(time => time.getHours() >= 12 && time.getHours() < 16);
+                            break;
+                        case 'evening':
+                            slideIndex = times.findIndex(time => time.getHours() >= 16);
+                            break;
+                    }
+                    if (slideIndex !== -1) {
+                        timeSwiper.slideTo(slideIndex);
+                    }
+                    updateTabsBasedOnTime(times[slideIndex]);
+                });
+            });
+
+            times.forEach(time => {
+                const formattedTime = formatTime(time);
+
+                const timeElement = document.createElement('div');
+                timeElement.className = 'swiper-slide swiper-slide_time';
+                timeElement.innerHTML = `<div class="day_wrapper">
+                                                <div class="time">${formattedTime}</div>
+                                            </div>`;
+                timeSwiperWrapper.appendChild(timeElement);
+            });
+
+            const timeSwiper = new Swiper('.time-swiper', {
+                slidesPerView: 4,
+                spaceBetween: 10,
+                on: {
+                    init: () => console.log('Time Swiper initialized')
+                }
+            });
+
+            timeSwiperWrapper.addEventListener('click', (event) => {
+                const timeElement = event.target.closest('.swiper-slide_time');
+                if (timeElement) {
+                    document.querySelectorAll('.swiper-slide_time').forEach(el => el.classList.remove('active'));
+                    timeElement.classList.add('active');
+                    const selectedTime = timeElement.querySelector('.time').textContent;
+                    const endTime = addMinutesToTime(selectedTime, totalMinutes);
+                    employeeTimeElement.textContent = `Выбрано время: ${selectedTime} - ${endTime}`;
+                }
+            });
+        }
+
+        renderTimeSlider();
+        renderService()
 
         days.forEach(day => {
             const formattedDate = formatDate(day);
@@ -526,21 +616,43 @@
             dayElement.className = 'swiper-slide swiper-slide_date';
             dayElement.setAttribute('data-date', day.toISOString());
             dayElement.innerHTML = `<div class="day_wrapper">
-                                        <div class="day">${dayOfWeek}</div>
-                                        <div class="date">${dayOfMonth}</div>
-                                    </div>`;
+                                            <div class="day">${dayOfWeek}</div>
+                                            <div class="date">${dayOfMonth}</div>
+                                        </div>`;
             daySwiperWrapper.appendChild(dayElement);
         });
 
-        times.forEach(time => {
-            const formattedTime = formatTime(time);
-
-            const timeElement = document.createElement('div');
-            timeElement.className = 'swiper-slide swiper-slide_time';
-            timeElement.innerHTML = `<div class="day_wrapper">
-                                        <div class="time">${formattedTime}</div>
-                                    </div>`;
-            timeSwiperWrapper.appendChild(timeElement);
+        daySwiperWrapper.addEventListener('click', (event) => {
+            const timeElement = event.target.closest('.swiper-slide_date');
+            TIME_END = {{time_end}};
+            INTERVAL = {{interval}};
+            TIME_START = {{time_start}};
+            if (timeElement) {
+                document.querySelectorAll('.swiper-slide_date').forEach(el => el.classList.remove('active'));
+                timeElement.classList.add('active');
+                const date = timeElement.getAttribute('data-date');
+                fetch('http://localhost:3000/booking/choose_day', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({date: date})
+                })
+                .then(response => response.json())
+                .then(data =>
+                {
+                    if(data.message === "Success")
+                    {
+                        console.log("Время старта "+data.time_start)
+                        console.log("Время старта "+TIME_START)
+                        TIME_END = data.time_end;
+                        INTERVAL = {{interval}};
+                        TIME_START = data.time_start;
+                        renderTimeSlider()
+                    }
+                });
+                console.log(`Полная дата: ${new Date(date)}`);
+            }
         });
 
         timeSwiperWrapper.addEventListener('click', (event) => {
@@ -550,6 +662,13 @@
                 timeElement.classList.add('active');
                 const selectedTime = timeElement.querySelector('.time').textContent;
                 const endTime = addMinutesToTime(selectedTime, totalMinutes);
+                fetch('http://localhost:3000/booking/choose_time', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({time: selectedTime, duration: totalMinutes})
+                })
                 employeeTimeElement.textContent = `Выбрано время: ${selectedTime} - ${endTime}`;
             }
         });
@@ -568,7 +687,7 @@
             modal.style.display = "flex";
         });
         confirmExitBtn.addEventListener('click', () => {
-            window.location.href = '/';
+            window.location.href = '/exit';
         });
         cancelExitBtn.addEventListener('click', () => {
             modal.style.display = "none";
@@ -643,27 +762,7 @@
 
         initActiveTabAndScroll();
 
-        tabs.forEach(tab => {
-            tab.addEventListener('click', (event) => {
-                const timeOfDay = event.target.dataset.time;
-                let slideIndex = 0;
-                switch (timeOfDay) {
-                    case 'morning':
-                        slideIndex = times.findIndex(time => time.getHours() < 12);
-                        break;
-                    case 'day':
-                        slideIndex = times.findIndex(time => time.getHours() >= 12 && time.getHours() < 16);
-                        break;
-                    case 'evening':
-                        slideIndex = times.findIndex(time => time.getHours() >= 16);
-                        break;
-                }
-                if (slideIndex !== -1) {
-                    timeSwiper.slideTo(slideIndex);
-                }
-                updateTabsBasedOnTime(times[slideIndex]);
-            });
-        });
+
 
         timeSwiper.on('slideChange', () => {
             const activeIndex = timeSwiper.activeIndex;
@@ -671,20 +770,9 @@
             updateTabsBasedOnTime(activeTime);
         });
 
-        const servicesContainer = document.querySelector('.services');
 
-        services.forEach(service => {
-            const serviceElement = document.createElement('div');
-            const formattedPrice = currencyFormatter.format(parseFloat(service.price));
-            serviceElement.innerHTML = `<div class="flex">
-                                            <h4 class="service_name">${service.name}</h4>
-                                            <div class="service_options">
-                                                <h4 class="service_price">${formattedPrice}</h4>
-                                            </div>
-                                        </div>
-                                       `;
-            servicesContainer.appendChild(serviceElement);
-        });
+
+
     });
 </script>
 </body>
