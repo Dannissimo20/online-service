@@ -1,10 +1,12 @@
-import {Get, Controller, Render, HttpCode, Param, Post, Body, Redirect} from '@nestjs/common';
+import {Get, Controller, Render, HttpCode, Param, Post, Body, Redirect, Query} from '@nestjs/common';
 import {AppService} from "./app.service";
+import {ApikeyDto} from "./modules/apikey/dto/apikey.dto";
+import {Apikeys} from "./modules/apikey/apikey.entity";
+import {ApikeyService} from "./modules/apikey/apikey.service";
 
 @Controller()
 export class AppController {
-  constructor(private appService: AppService) {
-  }
+  constructor(private appService: AppService, private readonly apikeyService: ApikeyService) {}
 
   private chosen_services :any[] = []
   private services :any[] = []
@@ -13,9 +15,21 @@ export class AppController {
   private chosen_day :any
   private chosen_time :any
 
-  @Get()
+  @Post('/add_apikey')
+  async add_apikey(@Body() body: ApikeyDto): Promise<Apikeys> {
+    return await this.apikeyService.create(body)
+  }
+
+  @Get('/apikey/:id')
+  async get_apikey(@Param() param) {
+    return await this.apikeyService.findOne(param.id)
+  }
+
+  @Get('/')
   @Render('index')
-  async root() {
+  async root(@Query('uniq') uniq: number) {
+    const apikey = await this.apikeyService.findOne(uniq)
+    await this.appService.setApikey(apikey['apikey'])
     const categories = await this.appService.getCategories()
     this.services = await this.appService.getServices()
     this.services.forEach(service => {
@@ -51,7 +65,7 @@ export class AppController {
   }
 
   @Get('/exit')
-  @Redirect('/', 302)
+  @Redirect('/?uniq=12345', 302)
   async exit() {
     this.chosen_services = []
   }
@@ -115,7 +129,15 @@ export class AppController {
 
   @Post('/summary/confirm')
   async summary_confirm(@Body() body: any) {
-    console.log(body.phone)
+    let client: any = await this.appService.findClient(body.phone)
+    if (client.phone === ""){
+      await this.appService.addClient(body.phone, body.client_fio)
+      client = await this.appService.findClient(body.phone)
+    }
+    await this.appService.add_record(this.chosen_services[0], this.chosen_employee, this.chosen_day, this.chosen_time, client)
+    return {
+      message: "Success"
+    }
   }
 
   @Get('/employee')

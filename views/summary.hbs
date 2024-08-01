@@ -393,7 +393,13 @@
         summaryTotalPrice1.textContent = currencyFormatter.format(totalPrice);
 
         nextButton.addEventListener("click", function() {
-            console.log("Кнопка была нажата");
+            fetch('http://localhost:3000/summary/confirm', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({client_fio: document.getElementById('name').value, phone: document.getElementById('phone').value.replace(/[^\d]/g, '')})
+            })
         });
         closeButton.addEventListener('click', (event) => {
             event.preventDefault();

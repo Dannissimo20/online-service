@@ -11,6 +11,11 @@ export class AppService {
     filialId = '66991b2a2f64b85e897c4b9c'
     url = 'https://api.telebon.ru/api'
 
+
+    async setApikey(apikey: string) {
+        this.apikey = apikey
+    }
+
     async getDates(employee_id): Promise<any> {
         const dates = []
 
@@ -118,6 +123,73 @@ export class AppService {
             .pipe(
                 map(res => res.data.filial[0])
             )
+        )
+    }
+
+    async findClient(phone){
+        return await lastValueFrom(this.httpService.post(`${this.url}/findclient`,
+            {
+                apikey: this.apikey,
+                phone: phone
+            })
+            .pipe(
+                map(res => res.data.clients)
+            )
+        )
+    }
+
+    async addClient(phone, fio){
+        const filial = await this.getFilialInfo()
+        return await lastValueFrom(this.httpService.put(`${this.url}/client`,
+            {
+                apikey: this.apikey,
+                phone: phone,
+                name: fio,
+                filial: filial.id
+            })
+        )
+    }
+
+    async add_record(service, employee, date, time, client){
+        const newDate = `${date.getFullYear()}-${date.getMonth()+1 < 10 ? '0' : ''}${date.getMonth()+1}-${date.getDate() < 10 ? '0' : ''}${date.getDate()}`;
+        const [hours, minutes] = time.split(":").map(Number);
+        const newHours = (hours + Math.floor((minutes + parseInt(service.duration)) / 60)) % 24;
+        const newMinutes = (minutes + parseInt(service.duration)) % 60;
+        const timeEnd = `${String(newHours).padStart(2, '0')}:${String(newMinutes).padStart(2, '0')}`
+        const finalTimeEnd = newDate+' '+timeEnd+":00"
+        const finalTime = newDate+' '+time+":00"
+        await lastValueFrom(this.httpService.put(`${this.url}/lesson/`,
+            {
+                anyemployedid: [
+                    {
+                        idemployed: employee.id
+                    }
+                ],
+                anysubproductid: [
+                    {
+                        idsubproduct: service.id,
+                        serviceDuration: service.duration,
+                        servicePrice: parseInt(service.tarif),
+                        servicename: service.name
+                    }
+                ],
+                clientId: [
+                    {
+                        idclient: client.id,
+                        confirmation: 1
+                    }
+                ],
+                employedid: employee.id,
+                end: finalTimeEnd,
+                filialId: client.filial,
+                paymentFullComplete: "no",
+                start: finalTime,
+                subproductId: service.id,
+                typerecord: "site",
+                confirmationComplete: "no",
+                apikey: this.apikey,
+                stage: 1
+            })
         )
     }
 
