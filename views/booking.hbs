@@ -412,7 +412,7 @@
             <p></p>
         </div>
     </div>
-    <a class="next_button" href="/summary">Продолжить</a>
+    <a class="next_button" href="/summary/{{user_id}}">Продолжить</a>
 </div>
 
 <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
@@ -636,7 +636,7 @@
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({date: date})
+                    body: JSON.stringify({user_id: localStorage.getItem('user_id'), date: date})
                 })
                 .then(response => response.json())
                 .then(data =>
@@ -667,7 +667,7 @@
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({time: selectedTime, duration: totalMinutes})
+                    body: JSON.stringify({time: selectedTime, duration: totalMinutes, user_id: localStorage.getItem('user_id')})
                 })
                 employeeTimeElement.textContent = `Выбрано время: ${selectedTime} - ${endTime}`;
             }
@@ -687,7 +687,7 @@
             modal.style.display = "flex";
         });
         confirmExitBtn.addEventListener('click', () => {
-            window.location.href = '/exit';
+            window.location.href = `/?uniq=${localStorage.getItem('uniq')}`;
         });
         cancelExitBtn.addEventListener('click', () => {
             modal.style.display = "none";

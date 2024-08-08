@@ -398,15 +398,17 @@
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({client_fio: document.getElementById('name').value, phone: document.getElementById('phone').value.replace(/[^\d]/g, '')})
+                body: JSON.stringify({client_fio: document.getElementById('name').value, phone: document.getElementById('phone').value.replace(/[^\d]/g, ''), user_id: localStorage.getItem("user_id")})
             })
+            localStorage.removeItem("user_id")
+            //localStorage.removeItem('uniq')
         });
         closeButton.addEventListener('click', (event) => {
             event.preventDefault();
             modal.style.display = "flex";
         });
         confirmExitBtn.addEventListener('click', () => {
-            window.location.href = '/exit';
+            window.location.href = `/?uniq=${localStorage.getItem('uniq')}`;
         });
         cancelExitBtn.addEventListener('click', () => {
             modal.style.display = "none";

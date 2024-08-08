@@ -1,3 +1,8 @@
+export interface IDatabaseConfigSqlite {
+    dialect: string
+    storage: string
+}
+
 export interface IDatabaseConfigAttributes {
     username?: string;
     password?: string;
@@ -10,4 +15,5 @@ export interface IDatabaseConfigAttributes {
 
 export interface IDatabaseConfig {
     development: IDatabaseConfigAttributes;
+    sqlite: IDatabaseConfigSqlite;
 }

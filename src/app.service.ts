@@ -48,6 +48,7 @@ export class AppService {
         return dates
     }
 
+    // TODO: добавить проверку на занятость времени
     async getTimes(employee_id, date){
         let targetRecord :any = null
         const datestart = `${new Date().getFullYear()}-`+
@@ -93,10 +94,10 @@ export class AppService {
         );
     }
 
-    async getServices(): Promise<any> {
+    async getServices(apikey: string): Promise<any> {
         return await lastValueFrom(this.httpService.post(`${this.url}/subproducts`,
             {
-                apikey: this.apikey
+                apikey: apikey
             })
             .pipe(
                 map(res => res.data.subproduct)
@@ -104,10 +105,10 @@ export class AppService {
         )
     }
 
-    async getCategories(): Promise<any> {
+    async getCategories(apikey: string): Promise<any> {
         return await lastValueFrom(this.httpService.post(`${this.url}/products`,
             {
-                apikey: this.apikey
+                apikey: apikey
             })
             .pipe(
                 map(res => res.data.product)
@@ -115,10 +116,10 @@ export class AppService {
         )
     }
 
-    async getFilialInfo(): Promise<any> {
+    async getFilialInfo(apikey: string): Promise<any> {
         return await lastValueFrom(this.httpService.post(`${this.url}/filials`,
             {
-                apikey: this.apikey
+                apikey: apikey
             })
             .pipe(
                 map(res => res.data.filial[0])
@@ -139,7 +140,7 @@ export class AppService {
     }
 
     async addClient(phone, fio){
-        const filial = await this.getFilialInfo()
+        const filial = await this.getFilialInfo('d7601151be99cf3f0844d5dfc1f09e1f')
         return await lastValueFrom(this.httpService.put(`${this.url}/client`,
             {
                 apikey: this.apikey,
@@ -150,27 +151,20 @@ export class AppService {
         )
     }
 
-    async add_record(service, employee, date, time, client){
-        const newDate = `${date.getFullYear()}-${date.getMonth()+1 < 10 ? '0' : ''}${date.getMonth()+1}-${date.getDate() < 10 ? '0' : ''}${date.getDate()}`;
-        const [hours, minutes] = time.split(":").map(Number);
-        const newHours = (hours + Math.floor((minutes + parseInt(service.duration)) / 60)) % 24;
-        const newMinutes = (minutes + parseInt(service.duration)) % 60;
-        const timeEnd = `${String(newHours).padStart(2, '0')}:${String(newMinutes).padStart(2, '0')}`
-        const finalTimeEnd = newDate+' '+timeEnd+":00"
-        const finalTime = newDate+' '+time+":00"
-        await lastValueFrom(this.httpService.put(`${this.url}/lesson/`,
+    async add_record(record, client){
+        await lastValueFrom(this.httpService.put(`${this.url}/lesson`,
             {
                 anyemployedid: [
                     {
-                        idemployed: employee.id
+                        idemployed: record['employee_id']
                     }
                 ],
                 anysubproductid: [
                     {
-                        idsubproduct: service.id,
-                        serviceDuration: service.duration,
-                        servicePrice: parseInt(service.tarif),
-                        servicename: service.name
+                        idsubproduct: record['service_id'],
+                        serviceDuration: record['service_duration'],
+                        servicePrice: record['service_tarif'],
+                        servicename: record['service_name']
                     }
                 ],
                 clientId: [
@@ -179,29 +173,17 @@ export class AppService {
                         confirmation: 1
                     }
                 ],
-                employedid: employee.id,
-                end: finalTimeEnd,
+                employedid: record['employee_id'],
+                end: record['date']+' '+record['end_time']+":00",
                 filialId: client.filial,
                 paymentFullComplete: "no",
-                start: finalTime,
-                subproductId: service.id,
+                start: record['date']+' '+record['start_time']+":00",
+                subproductId: record['service_id'],
                 typerecord: "site",
                 confirmationComplete: "no",
-                apikey: this.apikey,
+                apikey: record['apikey'],
                 stage: 1
             })
-        )
-    }
-
-    async spam(spam: string){
-        return await lastValueFrom(this.httpService.post('https://code10.ru/server_bot/telebot/spam',
-            {
-                filial_id: '665dcedb373423efedbff5b3',
-                message: spam
-            })
-            .pipe(
-                map(res => res.data)
-            )
         )
     }
 }

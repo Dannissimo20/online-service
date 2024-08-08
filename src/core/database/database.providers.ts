@@ -1,7 +1,8 @@
-import { Sequelize } from 'sequelize-typescript';
-import { SEQUELIZE, DEVELOPMENT} from '../constants';
+import {Sequelize, SequelizeOptions} from 'sequelize-typescript';
+import {SEQUELIZE, DEVELOPMENT, SQLITE} from '../constants';
 import { databaseConfig } from './database.config';
 import {Apikeys} from "../../modules/apikey/apikey.entity";
+import {Record} from "../../modules/record/record.entity";
 
 export const databaseProviders = [{
     provide: SEQUELIZE,
@@ -11,12 +12,24 @@ export const databaseProviders = [{
             case DEVELOPMENT:
                 config = databaseConfig.development;
                 break;
+            case SQLITE:
+                config = databaseConfig.sqlite;
+                break;
             default:
                 config = databaseConfig.development;
         }
-        const sequelize = new Sequelize(config);
-        sequelize.addModels([Apikeys]);
-        await sequelize.sync();
-        return sequelize;
+        const sequelizeDevelopment = new Sequelize(databaseConfig.development as SequelizeOptions);
+        const sequelizeSQLite = new Sequelize(databaseConfig.sqlite as SequelizeOptions);
+
+        sequelizeDevelopment.addModels([Apikeys]);
+        sequelizeSQLite.addModels([Record]);
+
+        await sequelizeDevelopment.sync();
+        await sequelizeSQLite.sync();
+
+        return {
+            sequelizeDevelopment,
+            sequelizeSQLite,
+        };
     },
 }];

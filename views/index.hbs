@@ -230,6 +230,9 @@
 
 <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 <script>
+    localStorage.setItem("user_id", '{{user_id}}')
+    localStorage.setItem("uniq", "{{uniq}}")
+
     const categories = {{{categories}}};
     const services = {{{services}}};
 
@@ -285,7 +288,7 @@
                                 <p class="service-price">${currencyFormatter.format(parseInt(service.tarif))}</p>
                                 <p class="service-duration">${service.duration} мин</p>
                             </div>
-                            <a href="/choose_service/${service.id}">Записаться</a>
+                            <a href="/booking/${service.id}/${localStorage.getItem('user_id')}">Записаться</a>
                         </div>
                     </div>
                     `;
