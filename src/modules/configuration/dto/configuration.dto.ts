@@ -1,10 +1,10 @@
 import { IsNotEmpty, MinLength } from 'class-validator';
 
-export class ApikeyDto {
+export class ConfigurationDto {
     @IsNotEmpty()
     @MinLength(5)
-    readonly uniq_key: number;
+    readonly uniq: string;
 
     @IsNotEmpty()
-    readonly apikey: string;
+    readonly weeks: number;
 }

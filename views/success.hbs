@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendar View</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background: #ffffff;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .wrapper{
+            border-radius: 24px 24px 0 0;
+            position: relative;
+            padding: 16px;
+            display: flex;
+            min-height: 80vh;
+            flex-direction: column;
+            align-items: center;
+        }
+        .header{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 40px;
+            margin-top: 24px;
+            position: relative;
+            margin-bottom: 28px;
+            >button{
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                right: 16px;
+                border: none;
+                background: transparent;
+                cursor: pointer;
+            }
+        }
+        #header-title {
+
+            text-align: center;
+            font-size: 24px;
+            font-weight: 700;
+            line-height: 20px;
+            text-transform: capitalize;
+        }
+        .success{
+            width: 72px;
+            height: 72px;
+            background: #00be70;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+        .title{
+            font-weight: 600;
+            font-size: 22px;
+            line-height: 20px;
+            color: #000;
+            text-align: center;
+            margin-top: 34px;
+            margin-bottom: 31px;
+        }
+        .next_button{
+            margin: 0 16px;
+            height: 47px;
+            width: 100%;
+            text-decoration: none;
+            background: #008BAA;
+            border: 1px solid #0000001A;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            line-height: 23px;
+            color: #ffffff;
+            font-weight: 700;
+            cursor: pointer;
+            @media screen and (max-width: 767px) {
+                margin-top: auto;
+
+            }
+        }
+        .flex-1{
+            display: flex;
+
+            width: 100%;
+            margin-bottom: 30px;
+        }
+        .main{
+            background: #f3f3f3;
+            border-radius: 16px;
+            width: 100%;
+            min-height: 160px;
+            display: flex;
+            flex-direction: column;
+            padding: 24px 16px;
+        }
+        .main_header{
+            margin-bottom: 24px;
+        }
+        .flex-row{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .time{
+            color: #008BAA;
+            font-size: 20px;
+            line-height: 24px;
+            font-weight: 700;
+        }
+        .filial{
+            color: #171717;
+            font-size: 18px;
+            line-height: 24px;
+            font-weight: 400;
+        }
+        .filial_img{
+            width: 48px;
+            height: 48px;
+            background: #00A3AD;
+            border-radius: 50%;
+            position: relative;
+            overflow: hidden;
+            >img{
+                object-fit: cover;
+                position: absolute;
+                inset: 0;
+                width: 100%;
+                height: 100%;
+            }
+        }
+        .employee_fio{
+            color: #000000;
+            font-size: 18px;
+            font-weight: 600;
+            line-height: 24px;
+        }
+        .service_name{
+            font-size: 16px;
+            line-height: 20px;
+            font-weight: 400;
+            color: #171717;
+        }
+        .service_price{
+            font-size: 16px;
+            line-height: 20px;
+            font-weight: 600;
+            color: #171717;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <button class="exit">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M0.307538 0.307538C0.717588 -0.102513 1.38241 -0.102513 1.79246 0.307538L7 5.51508L12.2075 0.307538C12.6176 -0.102513 13.2824 -0.102513 13.6925 0.307538C14.1025 0.717588 14.1025 1.38241 13.6925 1.79246L8.48492 7L13.6925 12.2075C14.1025 12.6176 14.1025 13.2824 13.6925 13.6925C13.2824 14.1025 12.6176 14.1025 12.2075 13.6925L7 8.48492L1.79246 13.6925C1.38241 14.1025 0.717588 14.1025 0.307538 13.6925C-0.102513 13.2824 -0.102513 12.6176 0.307538 12.2075L5.51508 7L0.307538 1.79246C-0.102513 1.38241 -0.102513 0.717588 0.307538 0.307538Z" fill="#171717"/>
+            </svg>
+        </button>
+    </div>
+    <div class="wrapper">
+
+            <div class="success">
+                <svg width="31" height="22" viewBox="0 0 31 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M27.6058 0.566011L10.996 16.713L3.39003 9.36201C2.59587 8.59433 1.32973 8.61578 0.562025 9.40996C-0.205675 10.2041 -0.184215 11.4703 0.609958 12.238L9.60996 20.938C10.3868 21.6889 11.6195 21.6871 12.3942 20.934L30.3942 3.43399C31.1861 2.66402 31.204 1.39782 30.434 0.605844C29.664 -0.186126 28.3978 -0.20396 27.6058 0.566011Z" fill="#fff"/>
+                </svg>
+
+
+            </div>
+            <h3 class="title">Вы записаны</h3>
+
+        <div class="flex-1">
+            <div class="main">
+                <div class="flex-row main_header">
+                    <div>
+                        <h3 class="time">{{day}}, {{time_start}}</h3>
+                        <p class="filial">{{filial_name}}</p>
+                    </div>
+                    <div class="filial_img">
+                        {{#if filial_logo_exist}}
+                            <img src="{{filial_logo}}" alt="no-image" />
+                        {{/if}}
+                    </div>
+                </div>
+                <div>
+                    <h3 class="employee_fio">{{employee_fio}}</h3>
+                    <div class="services"></div>
+                </div>
+            </div>
+        </div>
+        <button class="next_button">Продолжить</button>
+    </div>
+</div>
+
+
+</body>
+<script>
+    const servicesContainer = document.querySelector('.services');
+    const exitButton = document.querySelector(".exit");
+    const nextButton = document.querySelector(".next_button");
+    //const url = 'http://localhost:3000';
+    const url = "{{url}}";
+
+    function renderService(){
+        services.forEach(service => {
+            const serviceElement = document.createElement('div');
+            const formattedPrice = currencyFormatter.format(parseFloat(service.tarif));
+            serviceElement.innerHTML = `
+                                        <div class="flex-row">
+                                            <p class="service_name">${service.name}</p>
+                                            <p class="service_price">${formattedPrice}</p>
+                                        </div>
+
+                                           `;
+            servicesContainer.appendChild(serviceElement);
+        });
+    }
+    const currencyFormatter = new Intl.NumberFormat('ru-RU', {
+        style: 'currency',
+        currency: 'RUB',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+    function calculateTotalPrice(services) {
+        return services.reduce((total, service) => total + parseFloat(service.tarif), 0);
+    }
+
+    exitButton.addEventListener('click', () => {
+        fetch(`${url}/exit`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({user_id: localStorage.getItem('user_id')})
+        })
+        window.location.href = `/?uniq=${localStorage.getItem('uniq')}`;
+    });
+
+    nextButton.addEventListener('click', () => {
+        fetch(`${url}/exit`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({user_id: localStorage.getItem('user_id')})
+        })
+        window.location.href = `/?uniq=${localStorage.getItem('uniq')}`;
+    });
+
+    const services = {{{chosen_services}}};
+
+    renderService()
+</script>
+</html>

@@ -11,23 +11,28 @@
             margin: 0;
             box-sizing: border-box;
         }
+
         body {
             font-family: Arial, sans-serif;
             background: #F5F6F8;
         }
-        .image-wrapper{
+
+        .image-wrapper {
             height: 382px;
-            >img{
+
+            > img {
                 width: 100%;
                 height: 100%;
                 object-fit: cover;
             }
         }
+
         .container {
             max-width: 600px;
             margin: 0 auto;
         }
-        .wrapper{
+
+        .wrapper {
             border-radius: 24px 24px 0 0;
             background: #fff;
             position: relative;
@@ -35,24 +40,39 @@
             padding: 16px;
 
         }
+
         .header {
             top: -52px;
             position: relative;
         }
-        .header-title{
+
+        .header-title {
             cursor: pointer;
             display: flex;
             align-items: center;
-            >svg{
+
+            > svg {
                 margin-left: 12px;
             }
         }
+
         .logo {
             width: 80px;
             height: 80px;
             background: purple;
             border-radius: 50%;
+            position: relative;
+            overflow: hidden;
+
+            > img {
+                object-fit: cover;
+                position: absolute;
+                inset: 0;
+                width: 100%;
+                height: 100%;
+            }
         }
+
         .logo_title {
             font-size: 32px;
             line-height: 28px;
@@ -60,6 +80,7 @@
             margin-top: 8px;
             margin-bottom: 8px;
         }
+
         .logo_description {
             font-weight: 400;
             font-size: 14px;
@@ -73,6 +94,7 @@
             max-width: 600px;
             top: -30px;
         }
+
         .service-category-item {
             user-select: none;
             padding: 11px;
@@ -81,6 +103,7 @@
             text-align: center;
             cursor: pointer;
         }
+
         .service-category-item p {
             font-size: 14px;
             font-weight: 500;
@@ -93,6 +116,7 @@
             margin-top: 17px;
             margin-bottom: 24px;
         }
+
         .service-category-title {
             font-size: 22px;
             line-height: 28px;
@@ -105,45 +129,53 @@
             border-radius: 10px;
             transition: background-color 0.3s;
         }
-        .service-category >div{
+
+        .service-category > div {
             margin-bottom: 24px;
         }
+
         .service-title {
             font-size: 16px;
             line-height: 20px;
             font-weight: 400;
             color: #383734;
         }
-        .service-description{
+
+        .service-description {
             font-size: 14px;
             line-height: 16px;
             color: #171717B2;
             font-weight: 400;
         }
-        .service-price{
+
+        .service-price {
             font-size: 14px;
             line-height: 18px;
             letter-spacing: 0.09px;
             color: #383734;
         }
-        .service-duration{
+
+        .service-duration {
             line-height: 16px;
             letter-spacing: 0.08px;
             font-size: 12px;
             color: #A9A9A9;
         }
-        .service-left{
+
+        .service-left {
             display: flex;
             flex-direction: column;
             flex: 0.7
         }
-        .service-right{
+
+        .service-right {
             display: flex;
             margin-top: 16px;
             align-items: center;
             justify-content: flex-end;
             flex: 0.3;
-            a{
+
+            a {
                 height: 30px;
                 margin-left: 12px;
                 text-decoration: none;
@@ -164,6 +196,7 @@
                 border: none
             }
         }
+
         .service-category p {
             margin: 5px 0;
             max-height: 32px;
@@ -172,31 +205,37 @@
             white-space: normal;
             max-width: 176px;
         }
-        .service-item{
+
+        .service-item {
             display: flex;
             align-items: flex-start;
         }
-        .service-category-header{
+
+        .service-category-header {
             display: flex;
             cursor: pointer;
             align-items: center;
             justify-content: space-between;
         }
+
         .service-category {
             transition: max-height 0.5s ease, padding 0.5s ease;
             overflow: hidden;
             max-height: 0;
             opacity: 0;
         }
+
         .service-category.expanded {
             max-height: 500px;
             opacity: 1;
 
         }
+
         .rotate-svg {
             transform: rotate(180deg);
         }
-        .toggle-svg{
+
+        .toggle-svg {
             transition: .5s ease;
         }
     </style>
@@ -205,31 +244,46 @@
 
 <div class="container">
     <div class="image-wrapper">
-        <img src="https://i.ibb.co/BgN4pg2/ea1da5c57048e7cc526a7242d376221e.jpg" alt="no-image" />
+        {{#if filial_cover_exist}}
+            <img src="{{filial_cover}}" alt="no-image"/>
+        {{else}}
+            <img src="https://i.ibb.co/BgN4pg2/ea1da5c57048e7cc526a7242d376221e.jpg" alt="no-image"/>
+        {{/if}}
     </div>
-   <div class="wrapper">
-       <div class="header">
-           <div class="logo"></div>
-           <div class="header-title">
-               <h1 class="logo_title">{{filial_name}}</h1>
-               <svg  width="20" height="12" viewBox="0 0 20 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                   <path fill-rule="evenodd" clip-rule="evenodd" d="M19.0685 0.945188C19.6543 1.53094 19.6543 2.48074 19.0685 3.06652L11.0685 11.0665C10.4827 11.6523 9.53293 11.6523 8.94715 11.0665L0.947159 3.06652C0.361364 2.48074 0.361364 1.53094 0.947159 0.945188C1.53294 0.359438 2.48269 0.359438 3.06847 0.945188L10.0078 7.88453L16.9472 0.945188C17.533 0.359438 18.4828 0.359438 19.0685 0.945188Z" fill="#AAAAAA"/>
-               </svg>
+    <div class="wrapper">
+        <div class="header">
+            <div class="logo">
+                {{#if filial_logo_exist}}
+                    <img src="{{filial_logo}}" alt="no-image"/>
+                {{/if}}
+            </div>
+            <div class="header-title">
+                <h1 class="logo_title">{{filial_name}}</h1>
+                <svg width="20" height="12" viewBox="0 0 20 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" clip-rule="evenodd"
+                          d="M19.0685 0.945188C19.6543 1.53094 19.6543 2.48074 19.0685 3.06652L11.0685 11.0665C10.4827 11.6523 9.53293 11.6523 8.94715 11.0665L0.947159 3.06652C0.361364 2.48074 0.361364 1.53094 0.947159 0.945188C1.53294 0.359438 2.48269 0.359438 3.06847 0.945188L10.0078 7.88453L16.9472 0.945188C17.533 0.359438 18.4828 0.359438 19.0685 0.945188Z"
+                          fill="#AAAAAA"/>
+                </svg>
 
-           </div>
-           <p class="logo_description">{{filial_address}}</p>
-       </div>
-       <div class="service-items-container">
-           <div class="swiper-container">
-               <div class="swiper-wrapper" id="service-category-items"></div>
-           </div>
-       </div>
-       <div class="service" id="services-container"></div>
-   </div>
+            </div>
+            <p class="logo_description">{{filial_address}}, {{filial_comment}}</p>
+        </div>
+        <div class="service-items-container">
+            <div class="swiper-container">
+                <div class="swiper-wrapper" id="service-category-items"></div>
+            </div>
+        </div>
+        <div class="service" id="services-container"></div>
+    </div>
 </div>
 
 <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 <script>
+    // window.onbeforeunload = function() {
+    //     console.log("T,fnm")
+    //     return "Есть несохранённые изменения. Всё равно уходим?";
+    // };
+
     localStorage.setItem("user_id", '{{user_id}}')
     localStorage.setItem("uniq", "{{uniq}}")
 
@@ -271,27 +325,35 @@
             servicesElement.className = 'service-category expanded';
             servicesElement.id = category.id;
 
-            services.filter(service => service.idparents=== category.id).forEach(service => {
+            services.filter(service => service.idparents === category.id).forEach(service => {
                 const serviceElement = document.createElement('div');
                 let serviceComment = `<p class="service-description">Без комментария</p>`
-                if(service.comment){
+                if (service.comment) {
                     serviceComment = `<p class="service-description">${service.comment}</p>`
                 }
+                let price = `${currencyFormatter.format(parseInt(service.tarif))}`
+                if (!service.fixtarif) {
+                    price = `от ${currencyFormatter.format(parseInt(service.tarif))}`
+                }
+                let duration = `${service.duration} мин`
+                if(parseInt(service.duration) > 60){
+                    duration = `${Math.floor(parseInt(service.duration) / 60)} ч ${parseInt(service.duration) % 60} мин`
+                }
                 serviceElement.innerHTML = `
-                    <div class="service-item">
-                        <div class="service-left">
-                            <p class="service-title">${service.name}</p>
-                            ${service.comment}
-                        </div>
-                        <div class="service-right">
-                            <div>
-                                <p class="service-price">${currencyFormatter.format(parseInt(service.tarif))}</p>
-                                <p class="service-duration">${service.duration} мин</p>
+                        <div class="service-item">
+                            <div class="service-left">
+                                <p class="service-title">${service.name}</p>
+                                ${service.comment}
                             </div>
-                            <a href="/booking/${service.id}/${localStorage.getItem('user_id')}">Записаться</a>
+                            <div class="service-right">
+                                <div>
+                                    <p class="service-price">${price}</p>
+                                    <p class="service-duration">${duration}</p>
+                                </div>
+                                <a href="/booking/${service.id}/${localStorage.getItem('user_id')}">Записаться</a>
+                            </div>
                         </div>
-                    </div>
-                    `;
+                        `;
                 servicesElement.appendChild(serviceElement);
             });
 

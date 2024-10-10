@@ -1,8 +1,8 @@
 import {Sequelize, SequelizeOptions} from 'sequelize-typescript';
 import {SEQUELIZE, DEVELOPMENT, SQLITE} from '../constants';
 import { databaseConfig } from './database.config';
-import {Apikeys} from "../../modules/apikey/apikey.entity";
 import {Record} from "../../modules/record/record.entity";
+import {Configuration} from "../../modules/configuration/configuration.entity";
 
 export const databaseProviders = [{
     provide: SEQUELIZE,
@@ -21,7 +21,7 @@ export const databaseProviders = [{
         const sequelizeDevelopment = new Sequelize(databaseConfig.development as SequelizeOptions);
         const sequelizeSQLite = new Sequelize(databaseConfig.sqlite as SequelizeOptions);
 
-        sequelizeDevelopment.addModels([Apikeys]);
+        sequelizeDevelopment.addModels([Configuration]);
         sequelizeSQLite.addModels([Record]);
 
         await sequelizeDevelopment.sync();

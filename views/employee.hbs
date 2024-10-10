@@ -10,38 +10,45 @@
             padding: 0;
             box-sizing: border-box;
         }
+
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
             background-color: #fff;
         }
+
         .container {
             padding: 16px;
             max-width: 600px;
             margin: 0 auto;
         }
+
         .header {
             display: flex;
             align-items: center;
             padding: 14px 0;
             margin-bottom: 55px;
         }
+
         .header svg {
             margin-right: 12px;
             position: relative;
             top: 1px;
         }
+
         .header h1 {
             color: #000000;
             line-height: 26px;
             font-size: 24px;
             font-weight: 700;
         }
+
         .employee-list {
             list-style: none;
             padding: 0;
         }
+
         .employee-list li {
             display: flex;
             align-items: center;
@@ -49,9 +56,11 @@
             border-bottom: 1px solid #eee;
             cursor: pointer;
         }
+
         .employee-list li:last-child {
             border-bottom: none;
         }
+
         .image_wrapper {
             width: 40px;
             height: 40px;
@@ -63,57 +72,75 @@
             justify-content: center;
             border: 1px solid #E6E6E6;
         }
+
         .image_wrapper svg {
             position: relative;
             top: 3px;
         }
+
         .image_wrapper img {
             object-fit: cover;
             width: 100%;
             height: 100%;
             border-radius: 50%;
         }
+
         .employee-details {
             display: flex;
             flex-direction: column;
         }
+
         .employee-name {
             font-size: 16px;
             font-weight: 400;
             color: #171717;
             line-height: 18px;
         }
+
         .employee-role {
             font-size: 12px;
             color: #00BF76;
             font-weight: 400;
             line-height: 18px;
         }
+
         .employee-role .dot {
             position: relative;
             top: 1px;
             margin-right: 2px;
             margin-left: 2px;
         }
-        .status {
+
+        .status-active {
             font-size: 12px;
             color: #00BF76;
             font-weight: 400;
             line-height: 18px;
         }
+
+        .status-closest {
+            font-size: 12px;
+            color: #FF9104;
+            font-weight: 400;
+            line-height: 18px;
+        }
+
         .selected .image_wrapper {
             outline: 1px solid #008BAA;
         }
+
         .selected-icon {
             display: none;
         }
+
         .selected .selected-icon {
             display: block;
             position: absolute;
             top: -1px;
             right: -1px;
         }
-        .details_wrapper{
+
+        .details_wrapper {
             display: flex;
         }
     </style>
@@ -121,27 +148,31 @@
 <body>
 <div class="container">
     <div class="header">
-        <a href="/booking">
+        <a href="/employee/back/{{service_id}}/{{user_id}}">
             <svg width="24" height="18" viewBox="0 0 24 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M22.5 9H1M1 9L8 17M1 9L8 1" stroke="#171717" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M22.5 9H1M1 9L8 17M1 9L8 1" stroke="#171717" stroke-width="2" stroke-linecap="round"
+                      stroke-linejoin="round"/>
             </svg>
         </a>
         <h1>Выбрать сотрудника</h1>
     </div>
     <ul class="employee-list">
-        <li data-id="any">
+        <li data-id="any" data-status="Доступен">
             <div class="image_wrapper">
-                <svg class="selected-icon" width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg class="selected-icon" width="10" height="10" viewBox="0 0 10 10" fill="none"
+                     xmlns="http://www.w3.org/2000/svg">
                     <rect width="10" height="10" rx="5" fill="#008BAA"/>
-                    <path d="M7 3.5L4.01687 6.5L3 5.47738" stroke="white" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M7 3.5L4.01687 6.5L3 5.47738" stroke="white" stroke-linecap="round"
+                          stroke-linejoin="round"/>
                 </svg>
                 <svg width="24" height="26" viewBox="0 0 24 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 14.0837C18.6276 14.0837 24 19.0509 24 25.1786C24 25.6325 23.6028 26 23.112 26C22.6212 26 22.224 25.6325 22.224 25.1786C22.224 19.9574 17.6472 15.7253 12 15.7253C6.3528 15.7253 1.776 19.9574 1.776 25.1798C1.776 25.6325 1.3788 26 0.888 26C0.3972 26 0 25.6325 0 25.1786C0 19.0509 5.3724 14.0837 12 14.0837ZM11.6052 1.85079e-06C13.2351 -0.0012525 14.7988 0.635136 15.9523 1.7692C17.1059 2.90327 17.7548 4.44214 17.7564 6.04737C17.7548 7.65259 17.1059 9.19146 15.9523 10.3255C14.7988 11.4596 13.2351 12.096 11.6052 12.0947C9.97528 12.096 8.4116 11.4596 7.25806 10.3255C6.10452 9.19146 5.45559 7.65259 5.454 6.04737C5.45559 4.44214 6.10452 2.90327 7.25806 1.7692C8.4116 0.635136 9.97528 -0.0012525 11.6052 1.85079e-06ZM11.6052 1.66637C11.0206 1.6659 10.4415 1.77885 9.90122 1.99876C9.3609 2.21868 8.86985 2.54125 8.45611 2.94806C8.04237 3.35488 7.71404 3.83796 7.48987 4.36974C7.26569 4.90152 7.15007 5.47158 7.1496 6.04737C7.15007 6.62315 7.26569 7.19321 7.48987 7.72499C7.71404 8.25677 8.04237 8.73985 8.45611 9.14667C8.86985 9.55348 9.3609 9.87606 9.90122 10.096C10.4415 10.3159 11.0206 10.4288 11.6052 10.4284C12.1899 10.429 12.7691 10.3162 13.3096 10.0963C13.85 9.87646 14.3412 9.55392 14.7551 9.14709C15.1689 8.74026 15.4974 8.25712 15.7216 7.72526C15.9459 7.1934 16.0615 6.62325 16.062 6.04737C16.0615 5.47138 15.9458 4.90113 15.7215 4.3692C15.4972 3.83726 15.1686 3.35407 14.7546 2.94723C14.3407 2.54038 13.8493 2.21786 13.3087 1.99808C12.7681 1.77831 12.19 1.66559 11.6052 1.66637Z" fill="#E6E6E6"/>
+                    <path d="M12 14.0837C18.6276 14.0837 24 19.0509 24 25.1786C24 25.6325 23.6028 26 23.112 26C22.6212 26 22.224 25.6325 22.224 25.1786C22.224 19.9574 17.6472 15.7253 12 15.7253C6.3528 15.7253 1.776 19.9574 1.776 25.1798C1.776 25.6325 1.3788 26 0.888 26C0.3972 26 0 25.6325 0 25.1786C0 19.0509 5.3724 14.0837 12 14.0837ZM11.6052 1.85079e-06C13.2351 -0.0012525 14.7988 0.635136 15.9523 1.7692C17.1059 2.90327 17.7548 4.44214 17.7564 6.04737C17.7548 7.65259 17.1059 9.19146 15.9523 10.3255C14.7988 11.4596 13.2351 12.096 11.6052 12.0947C9.97528 12.096 8.4116 11.4596 7.25806 10.3255C6.10452 9.19146 5.45559 7.65259 5.454 6.04737C5.45559 4.44214 6.10452 2.90327 7.25806 1.7692C8.4116 0.635136 9.97528 -0.0012525 11.6052 1.85079e-06ZM11.6052 1.66637C11.0206 1.6659 10.4415 1.77885 9.90122 1.99876C9.3609 2.21868 8.86985 2.54125 8.45611 2.94806C8.04237 3.35488 7.71404 3.83796 7.48987 4.36974C7.26569 4.90152 7.15007 5.47158 7.1496 6.04737C7.15007 6.62315 7.26569 7.19321 7.48987 7.72499C7.71404 8.25677 8.04237 8.73985 8.45611 9.14667C8.86985 9.55348 9.3609 9.87606 9.90122 10.096C10.4415 10.3159 11.0206 10.4288 11.6052 10.4284C12.1899 10.429 12.7691 10.3162 13.3096 10.0963C13.85 9.87646 14.3412 9.55392 14.7551 9.14709C15.1689 8.74026 15.4974 8.25712 15.7216 7.72526C15.9459 7.1934 16.0615 6.62325 16.062 6.04737C16.0615 5.47138 15.9458 4.90113 15.7215 4.3692C15.4972 3.83726 15.1686 3.35407 14.7546 2.94723C14.3407 2.54038 13.8493 2.21786 13.3087 1.99808C12.7681 1.77831 12.19 1.66559 11.6052 1.66637Z"
+                          fill="#E6E6E6"/>
                 </svg>
             </div>
             <div class="employee-details">
                 <div class="employee-name">Любой сотрудник</div>
-                <div class="status">Доступен</div>
+                <div class="status-active">Доступен</div>
             </div>
 
 
@@ -166,12 +197,16 @@
     // ];
 
     const employees = {{{employees}}};
+    //const url = 'http://localhost:3000';
+    const url = "{{url}}";
 
     const employeeList = document.querySelector('.employee-list');
 
     employees.forEach(employee => {
         const li = document.createElement('li');
         li.dataset.id = employee.id;
+        li.dataset.fio = employee.fio;
+        li.dataset.status = employee.status
         let imageContent = '';
         let employeeRole = ''
         if (employee.avatar) {
@@ -187,6 +222,13 @@
             employeeRole = ``;
         }
 
+        let status = null;
+        if (employee.status === 'Доступен') {
+            status = 'status-active'
+        }
+        else
+            status = 'status-closest';
+
         li.innerHTML = `
             <div class="image_wrapper">
                 <svg class="selected-icon" width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -200,7 +242,7 @@
                 <div class="details_wrapper">
                     ${employeeRole}
 
-                    <div class="status">${employee.status}</div>
+                    <div class="${status}">${employee.status}</div>
                 </div>
             </div>
 
@@ -208,18 +250,64 @@
 
         employeeList.appendChild(li);
     });
+    console.log(employeeList)
 
-    employeeList.addEventListener('click', function(event) {
+    employeeList.addEventListener('click', function (event) {
         const listItem = event.target.closest('li');
         if (!listItem) return;
 
         const selectedId = listItem.dataset.id;
+        const fio = listItem.dataset.fio;
+        const status = listItem.dataset.status;
+        console.log(status)
 
-        if (selectedId === 'any') {
-            console.log("Привет");
-        } else {
-            console.log(selectedId);
-        }
+        fetch(`${url}/choose_employee`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({user_id: localStorage.getItem('user_id'), employee_id: selectedId, employee_fio: fio, employee_status: status})
+        }).then(response => response.json())
+                .then(data =>
+                {
+                    if (data.employee_id !== "any"){
+                        fetch(`${url}/booking/choose_day`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({user_id: localStorage.getItem('user_id'), date: new Date(data.date).toISOString()})
+                        })
+                                .then(response => response.json())
+                                .then(data =>
+                                {
+                                    if(data.message === "Success")
+                                    {
+                                        //console.log("Время старта "+data.time_start)
+                                        //console.log("Время старта "+TIME_START)
+                                        TIME_END = 20;
+                                        INTERVAL = 30;
+                                        TIME_START = 10;
+                                        const tim = JSON.parse(data.times)
+                                        renderTimeSlider(tim)
+                                    }
+                                });
+
+                        fetch(`${url}/booking/choose_time`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({time: data.time, duration: data.duration, user_id: localStorage.getItem('user_id')})
+                        }).then(response => {
+                            window.location.href = `/booking/{{service_id}}/{{user_id}}`
+                        })
+                    }
+                    else{
+                        window.location.href = `/booking/{{service_id}}/{{user_id}}`
+                    }
+                });
+
 
         document.querySelectorAll('.employee-list li').forEach(li => {
             li.classList.remove('selected');

@@ -32,7 +32,8 @@ export class RecordService {
             id: record['service_id'],
             duration: record['service_duration'],
             tarif: record['service_tarif'],
-            name: record['service_name']
+            name: record['service_name'],
+            intervalonlinebooking: record['service_interval']
         }]
     }
 
@@ -55,8 +56,8 @@ export class RecordService {
     }
 
     async update(user_id, data) {
-        const [numberOfAffectedRows, updatedPost] = await this.recordRepository.update({ ...data }, { where: { user_id}, returning: true });
+        const [numberOfAffectedRows, updatedRecord] = await this.recordRepository.update({ ...data }, { where: { user_id}, returning: true });
 
-        return updatedPost;
+        return updatedRecord;
     }
 }

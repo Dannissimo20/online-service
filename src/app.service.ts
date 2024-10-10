@@ -1,34 +1,36 @@
 import {HttpService} from '@nestjs/axios';
-import {Injectable, ParseIntPipe} from '@nestjs/common';
-import {lastValueFrom, map} from "rxjs";
-import {forEachResolvedProjectReference} from "ts-loader/dist/instances";
+import {Injectable} from '@nestjs/common';
+import {catchError, lastValueFrom, map, throwError} from "rxjs";
+import {config} from "./config";
 
 @Injectable()
 export class AppService {
-    constructor(private httpService: HttpService) {}
+    constructor(private httpService: HttpService) {
+    }
 
     apikey = 'd7601151be99cf3f0844d5dfc1f09e1f'
     filialId = '66991b2a2f64b85e897c4b9c'
-    url = 'https://api.telebon.ru/api'
+    url = config.api
+    //url = "https://dev.api.telebon.ru/api"
 
 
     async setApikey(apikey: string) {
         this.apikey = apikey
     }
 
-    async getDates(employee_id): Promise<any> {
+    async getDates(employee_id, apikey, weeks): Promise<any> {
         const dates = []
 
-        const datestart = `${new Date().getFullYear()}-`+
-        `${String(new Date().getMonth() + 1).padStart(2, '0')}-`+
-        `${String(new Date().getDate()).padStart(2, '0')}`
+        const datestart = `${new Date().getFullYear()}-` +
+            `${String(new Date().getMonth() + 1).padStart(2, '0')}-` +
+            `${String(new Date().getDate()).padStart(2, '0')}`
 
-        const dateend = `${new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).getFullYear()}-`+
-        `${String(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).getMonth() + 1).padStart(2, '0')}-`+
-        `${String(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).getDate()).padStart(2, '0')}`
+        const dateend = `${new Date(Date.now() + weeks * 7 * 24 * 60 * 60 * 1000).getFullYear()}-` +
+            `${String(new Date(Date.now() + weeks * 7 * 24 * 60 * 60 * 1000).getMonth() + 1).padStart(2, '0')}-` +
+            `${String(new Date(Date.now() + weeks * 7 * 24 * 60 * 60 * 1000).getDate()).padStart(2, '0')}`
         await lastValueFrom(this.httpService.post(`${this.url}/lessons/ulessons`,
             {
-                apikey: this.apikey,
+                apikey: apikey,
                 employee: employee_id,
                 datestart: datestart,
                 dateend: dateend
@@ -48,20 +50,80 @@ export class AppService {
         return dates
     }
 
+    async getTimes1(employee_id, weeks, apikey, service, date) {
+        let datestart;
+        let dateend;
+        if (date === null) {
+            datestart = `${new Date().getFullYear()}-` +
+                `${String(new Date().getMonth() + 1).padStart(2, '0')}-` +
+                `${String(new Date().getDate()).padStart(2, '0')}`
+
+            dateend = `${new Date(Date.now() + weeks * 7 * 24 * 60 * 60 * 1000).getFullYear()}-` +
+                `${String(new Date(Date.now() + weeks * 7 * 24 * 60 * 60 * 1000).getMonth() + 1).padStart(2, '0')}-` +
+                `${String(new Date(Date.now() + weeks * 7 * 24 * 60 * 60 * 1000).getDate()).padStart(2, '0')}`
+        }
+        else{
+            datestart = date
+            dateend = date
+        }
+
+        return await lastValueFrom(this.httpService.post(`${this.url}/users/timeslot`,
+            {
+                apikey: apikey,
+                employeeid: employee_id,
+                datestart: datestart,
+                datefinish: dateend,
+                interval: service['intervalonlinebooking'],
+                duration: parseInt(service['duration']),
+            })
+            .pipe(
+                map(res => res.data.dates),
+                catchError(err => {
+                    console.log(err)
+                    return throwError('Something went wrong with the request.');
+                })
+            )
+        )
+    }
+
+    async getFirstFreeTime(employee_id, weeks, apikey, service, datestart){
+        const dateend = `${new Date(Date.now() + weeks * 7 * 24 * 60 * 60 * 1000).getFullYear()}-` +
+            `${String(new Date(Date.now() + weeks * 7 * 24 * 60 * 60 * 1000).getMonth() + 1).padStart(2, '0')}-` +
+            `${String(new Date(Date.now() + weeks * 7 * 24 * 60 * 60 * 1000).getDate()).padStart(2, '0')}`
+
+        return await lastValueFrom(this.httpService.post(`${this.url}/users/timeslot`,
+            {
+                apikey: apikey,
+                employeeid: employee_id,
+                datestart: datestart,
+                datefinish: dateend,
+                interval: service['intervalonlinebooking'],
+                duration: parseInt(service['duration']),
+            })
+            .pipe(
+                map(res => res.data.dates),
+                catchError(err => {
+                    console.log(err)
+                    return throwError('Something went wrong with the request.');
+                })
+            )
+        )
+    }
+
     // TODO: добавить проверку на занятость времени
-    async getTimes(employee_id, date){
-        let targetRecord :any = null
-        const datestart = `${new Date().getFullYear()}-`+
-            `${String(new Date().getMonth() + 1).padStart(2, '0')}-`+
+    async getTimes(employee_id, date, apikey) {
+        let targetRecord: any = null
+        const datestart = `${new Date().getFullYear()}-` +
+            `${String(new Date().getMonth() + 1).padStart(2, '0')}-` +
             `${String(new Date().getDate()).padStart(2, '0')}`
 
-        const dateend = `${new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).getFullYear()}-`+
-            `${String(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).getMonth() + 1).padStart(2, '0')}-`+
+        const dateend = `${new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).getFullYear()}-` +
+            `${String(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).getMonth() + 1).padStart(2, '0')}-` +
             `${String(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).getDate()).padStart(2, '0')}`
 
         await lastValueFrom(this.httpService.post(`${this.url}/lessons/ulessons`,
             {
-                apikey: this.apikey,
+                apikey: apikey,
                 employee: employee_id,
                 datestart: datestart,
                 dateend: dateend
@@ -81,17 +143,29 @@ export class AppService {
         return targetRecord
     }
 
-    async getUsers(service_id): Promise<any> {
+    async getEmployees(service_id, apikey): Promise<any> {
         return await lastValueFrom(this.httpService.post(`${this.url}/users`,
             {
-                apikey: this.apikey
+                apikey: apikey
             })
             .pipe(
                 map(res => res.data.users
                     .filter(user => user.services === true && user.idservices
-                        .some(service => service.idservice === service_id)))
+                        .some(service => service.idservice === service_id) && user.onlinerec === true))
             )
         );
+    }
+
+    async getCurrentUser(user_id, apikey): Promise<any> {
+        return await lastValueFrom(this.httpService.post(`${this.url}/users`,
+            {
+                apikey: apikey
+            })
+            .pipe(
+                map(res => res.data.users
+                    .filter(user => user.id === user_id))
+            )
+        )
     }
 
     async getServices(apikey: string): Promise<any> {
@@ -100,7 +174,8 @@ export class AppService {
                 apikey: apikey
             })
             .pipe(
-                map(res => res.data.subproduct)
+                map(res => res.data.subproduct
+                    .filter(subproduct => subproduct.group === "no" && subproduct.onlinebooking === true && subproduct.employee.length !== 0))
             )
         )
     }
@@ -127,10 +202,10 @@ export class AppService {
         )
     }
 
-    async findClient(phone){
+    async findClient(phone, apikey) {
         return await lastValueFrom(this.httpService.post(`${this.url}/findclient`,
             {
-                apikey: this.apikey,
+                apikey: apikey,
                 phone: phone
             })
             .pipe(
@@ -139,11 +214,11 @@ export class AppService {
         )
     }
 
-    async addClient(phone, fio){
-        const filial = await this.getFilialInfo('d7601151be99cf3f0844d5dfc1f09e1f')
+    async addClient(phone, fio, apikey) {
+        const filial = await this.getFilialInfo(apikey)
         return await lastValueFrom(this.httpService.put(`${this.url}/client`,
             {
-                apikey: this.apikey,
+                apikey: apikey,
                 phone: phone,
                 name: fio,
                 filial: filial.id
@@ -151,8 +226,8 @@ export class AppService {
         )
     }
 
-    async add_record(record, client){
-        await lastValueFrom(this.httpService.put(`${this.url}/lesson`,
+    async add_record(record, client) {
+        return await lastValueFrom(this.httpService.put(`${this.url}/lesson`,
             {
                 anyemployedid: [
                     {
@@ -174,15 +249,26 @@ export class AppService {
                     }
                 ],
                 employedid: record['employee_id'],
-                end: record['date']+' '+record['end_time']+":00",
+                end: record['date'] + ' ' + record['end_time'] + ":00",
                 filialId: client.filial,
                 paymentFullComplete: "no",
-                start: record['date']+' '+record['start_time']+":00",
+                start: record['date'] + ' ' + record['start_time'] + ":00",
                 subproductId: record['service_id'],
                 typerecord: "site",
                 confirmationComplete: "no",
-                apikey: record['apikey'],
+                apikey: record['uniq'],
                 stage: 1
+            })
+        )
+    }
+
+    async sendPush(token, client, employee_fio, service_name, date, start_time) {
+        return await lastValueFrom(this.httpService.post('https://exp.host/--/api/v2/push/send',
+            {
+                to: token['pushtocken'],
+                title: "Новая запись",
+                body: `${client.name} (${client.phone}) записался к ${employee_fio} на ${service_name} ${date} в ${start_time} через онлайн-запись`,
+                sound: "default"
             })
         )
     }

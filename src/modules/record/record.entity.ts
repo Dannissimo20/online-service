@@ -9,10 +9,10 @@ export class Record extends Model<Record> {
     user_id: string;
 
     @Column({
-        type: DataType.INTEGER,
+        type: DataType.TEXT,
         allowNull: true,
     })
-    uniq: number;
+    uniq: string;
 
     @Column({
         type: DataType.TEXT,
@@ -49,6 +49,12 @@ export class Record extends Model<Record> {
         allowNull: true,
     })
     service_name: string;
+
+    @Column({
+        type: DataType.INTEGER,
+        allowNull: true,
+    })
+    service_interval: number;
 
     @Column({
         type: DataType.TEXT,

@@ -102,7 +102,7 @@
             font-size: 24px;
             font-weight: 700;
             line-height: 20px;
-            text-transform: capitalize;
+            text-transform: none;
         }
         .container {
             max-width: 600px;
@@ -176,7 +176,7 @@
                 color: #000000;
             }
         }
-        .tebs_wrapper{
+        .tabs_wrapper{
             border-top: 1px solid #D4D4D4;
             padding-top: 20px;
 
@@ -376,7 +376,7 @@
         <div class="swiper-wrapper"></div>
     </div>
 
-    <div class="tebs_wrapper">
+    <div class="tabs_wrapper">
         <div class="tabs">
             <div class="tab" data-time="morning">Утро</div>
             <div class="tab" data-time="day">День</div>
@@ -397,7 +397,7 @@
         <div class="employee">
 
             <p>Сотрудник <span>{{employee_fio}}</span></p>
-<!--            <a href="/employee">Изменить</a>-->
+            <a href="/employee/{{user_id}}" id="change-employee-button">Изменить</a>
         </div>
     </div>
 
@@ -417,6 +417,18 @@
 
 <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 <script>
+    // window.onbeforeunload = function() {
+    //     fetch()
+    //     return "Есть несохранённые изменения. Всё равно уходим?";
+    // };
+    let update = {{update}}
+    if (update){
+        window.onbeforeunload = function() {
+            alert(localStorage.getItem('user_id'))
+            fetch('/exit', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({user_id: localStorage.getItem('user_id')})})
+        };
+        update = true
+    }
     document.addEventListener('DOMContentLoaded', () => {
         const daySwiperWrapper = document.querySelector('.day-swiper .swiper-wrapper');
         const timeSwiperWrapper = document.querySelector('.time-swiper .swiper-wrapper');
@@ -430,7 +442,10 @@
         const cancelExitBtn = document.getElementById("cancelExit");
         const closeButton = document.querySelector('.header a');
         const servicesContainer = document.querySelector('.services');
+        const changeEmployeeButton = document.getElementById('change-employee-button');
         const today = new Date();
+        const url = "{{url}}";
+        //const url = "http://localhost:3000";
         // Интервал времени
         let INTERVAL = 30;
         // Время начала
@@ -438,12 +453,20 @@
         // Время окончания
         let TIME_END = 20;
 
+        const chosen_date = "{{chosen_date}}";
+        const chosen_time = "{{chosen_time}}";
+
         const currencyFormatter = new Intl.NumberFormat('ru-RU', {
             style: 'currency',
             currency: 'RUB',
             minimumFractionDigits: 2,
             maximumFractionDigits: 2
         });
+
+        const isLinkEnabled = {{is_link_enabled}}
+        if(!isLinkEnabled)
+            changeEmployeeButton.style.display = 'none'
+
 
         function calculateTotalDuration(services) {
             return services.reduce((total, service) => total + parseInt(service.duration, 10), 0);
@@ -548,9 +571,14 @@
             });
         }
 
-        function renderTimeSlider() {
+        function renderTimeSlider(times1) {
             timeSwiperWrapper.innerHTML = '';
-            const times = generateTimes(TIME_START, TIME_END, INTERVAL);
+            //const times = generateTimes(TIME_START, TIME_END, INTERVAL);
+            let times = [];
+            for (time of times1){
+                const [hours, minutes] = time.split(':');
+                times.push(new Date(0,0,0,parseInt(hours),parseInt(minutes)));
+            }
 
             tabs.forEach(tab => {
                 tab.addEventListener('click', (event) => {
@@ -582,6 +610,7 @@
                 timeElement.innerHTML = `<div class="day_wrapper">
                                                 <div class="time">${formattedTime}</div>
                                             </div>`;
+                timeElement.setAttribute('data-time', formattedTime);
                 timeSwiperWrapper.appendChild(timeElement);
             });
 
@@ -605,7 +634,7 @@
             });
         }
 
-        renderTimeSlider();
+        renderTimeSlider({{{times}}});
         renderService()
 
         days.forEach(day => {
@@ -622,16 +651,38 @@
             daySwiperWrapper.appendChild(dayElement);
         });
 
+        if (chosen_date !== ""){
+            const temp = new Date(chosen_date);
+            const specificElement = document.querySelector(`[data-date="${temp.toISOString()}"]`);
+            document.querySelectorAll('.swiper-slide_date').forEach(el => el.classList.remove('active'));
+            specificElement.classList.add('active');
+        }
+
+        if (chosen_time !== ""){
+            const [hours, minutes] = time.split(':');
+            console.log('chosen_time')
+            console.log(chosen_time)
+            const temp = new Date(0,0,0,parseInt(hours),parseInt(minutes));
+            const specificElement = document.querySelector(`[data-time="${chosen_time}"]`);
+            document.querySelectorAll('.swiper-slide_time').forEach(el => el.classList.remove('active'));
+            specificElement.classList.add('active');
+            const endTime = addMinutesToTime(chosen_time, totalMinutes);
+            employeeTimeElement.textContent = `Выбрано время: ${chosen_time} - ${endTime}`;
+        }
+
         daySwiperWrapper.addEventListener('click', (event) => {
             const timeElement = event.target.closest('.swiper-slide_date');
-            TIME_END = {{time_end}};
-            INTERVAL = {{interval}};
-            TIME_START = {{time_start}};
+            TIME_END = 20;
+            INTERVAL = 30;
+            TIME_START = 10;
             if (timeElement) {
                 document.querySelectorAll('.swiper-slide_date').forEach(el => el.classList.remove('active'));
                 timeElement.classList.add('active');
+
                 const date = timeElement.getAttribute('data-date');
-                fetch('http://localhost:3000/booking/choose_day', {
+                console.log(`date:`)
+                console.log(date)
+                fetch(`${url}/booking/choose_day`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -643,15 +694,18 @@
                 {
                     if(data.message === "Success")
                     {
-                        console.log("Время старта "+data.time_start)
-                        console.log("Время старта "+TIME_START)
-                        TIME_END = data.time_end;
-                        INTERVAL = {{interval}};
-                        TIME_START = data.time_start;
-                        renderTimeSlider()
+                        //console.log("Время старта "+data.time_start)
+                        //console.log("Время старта "+TIME_START)
+                        TIME_END = 20;
+                        INTERVAL = 30;
+                        TIME_START = 10;
+                        console.log(data.times)
+                        const tim = JSON.parse(data.times)
+                        employeeTimeElement.textContent = ""
+                        renderTimeSlider(tim)
                     }
                 });
-                console.log(`Полная дата: ${new Date(date)}`);
+                //console.log(`Полная дата: ${new Date(date)}`);
             }
         });
 
@@ -662,7 +716,7 @@
                 timeElement.classList.add('active');
                 const selectedTime = timeElement.querySelector('.time').textContent;
                 const endTime = addMinutesToTime(selectedTime, totalMinutes);
-                fetch('http://localhost:3000/booking/choose_time', {
+                fetch(`${url}/booking/choose_time`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -672,21 +726,19 @@
                 employeeTimeElement.textContent = `Выбрано время: ${selectedTime} - ${endTime}`;
             }
         });
-        daySwiperWrapper.addEventListener('click', (event) => {
-            const timeElement = event.target.closest('.swiper-slide_date');
-            if (timeElement) {
-                document.querySelectorAll('.swiper-slide_date').forEach(el => el.classList.remove('active'));
-                timeElement.classList.add('active');
-                const date = timeElement.getAttribute('data-date');
-                console.log(`Полная дата: ${new Date(date)}`);
-            }
-        });
 
         closeButton.addEventListener('click', (event) => {
             event.preventDefault();
             modal.style.display = "flex";
         });
         confirmExitBtn.addEventListener('click', () => {
+            fetch(`${url}/exit`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({user_id: localStorage.getItem('user_id')})
+            })
             window.location.href = `/?uniq=${localStorage.getItem('uniq')}`;
         });
         cancelExitBtn.addEventListener('click', () => {
@@ -726,7 +778,7 @@
         function updateTabsBasedOnTime(time) {
             const hour = time.getHours();
             let activeTab = '';
-            if (hour >= 10 && hour < 12) {
+            if (hour < 12) {
                 activeTab = 'morning';
             } else if (hour >= 12 && hour < 16) {
                 activeTab = 'day';
@@ -744,7 +796,9 @@
 
         function updateHeaderTitle(date) {
             const monthYear = formatMonthYear(date);
-            headerTitle.textContent = monthYear;
+            const title = monthYear.charAt(0).toUpperCase() + monthYear.slice(1)
+            console.log(`monthYear: ${title}`)
+            headerTitle.textContent = title;
         }
 
         function scrollToTime(time) {

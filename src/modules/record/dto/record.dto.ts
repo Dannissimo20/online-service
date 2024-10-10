@@ -6,11 +6,11 @@ export class RecordDto {
     @IsNotEmpty()
     apikey: string;
     @IsNotEmpty()
-    uniq: number;
+    uniq: string;
     @IsNotEmpty()
     filial_name: string;
 
-    constructor(user_id: string, apikey: string, uniq: number, filial_name: string) {
+    constructor(user_id: string, apikey: string, uniq: string, filial_name: string) {
         this.filial_name = filial_name
         this.user_id = user_id
         this.apikey = apikey

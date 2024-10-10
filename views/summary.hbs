@@ -231,6 +231,7 @@
             line-height: 23px;
             color: #ffffff;
             font-weight: 700;
+            cursor: pointer;
         }
         .personal_data{
             color: #767676;
@@ -305,7 +306,7 @@
         </div>
     </div>
     <div class="header">
-        <a href="/booking">
+        <a href="/booking/back/{{service_id}}/{{user_id}}">
             <svg width="24" height="18" viewBox="0 0 24 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M22.5 9H1M1 9L8 17M1 9L8 1" stroke="#171717" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
@@ -361,6 +362,16 @@
 </div>
 
 <script>
+    /*let update = true
+    if (update){
+        window.onbeforeunload = function() {
+            fetch('/booking/back/{{service_id}}/{{user_id}}', {method: 'GET'})
+        };
+        update = true
+    }
+    /*window.addEventListener('popstate', (event) => {
+        fetch('/booking/back/{{service_id}}/{{user_id}}', {method: 'GET'})
+    });*/
     document.addEventListener('DOMContentLoaded', () => {
         const summaryTotalPrice = document.querySelector('.summary h3');
         const summaryTotalPrice1 = document.querySelector('.summary_final h3');
@@ -369,6 +380,8 @@
         const cancelExitBtn = document.getElementById("cancelExit");
         const closeButton = document.querySelector('.header .exit');
         const nextButton = document.querySelector(".next_button");
+        //const url = 'http://localhost:3000';
+        const url = "{{url}}";
 
         const currencyFormatter = new Intl.NumberFormat('ru-RU', {
             style: 'currency',
@@ -393,21 +406,36 @@
         summaryTotalPrice1.textContent = currencyFormatter.format(totalPrice);
 
         nextButton.addEventListener("click", function() {
-            fetch('http://localhost:3000/summary/confirm', {
+            update = false
+            const response = fetch(`${url}/summary/confirm`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({client_fio: document.getElementById('name').value, phone: document.getElementById('phone').value.replace(/[^\d]/g, ''), user_id: localStorage.getItem("user_id")})
+                body: JSON.stringify(
+                    {
+                        client_fio: document.getElementById('name').value,
+                        phone: document.getElementById('phone').value.replace(/[^\d]/g, ''),
+                        user_id: localStorage.getItem("user_id")
+                    }
+                )
+            }).then(response => {
+                console.log(`Response: ${response.url}`);
+                window.location.href = response.url
             })
-            localStorage.removeItem("user_id")
-            //localStorage.removeItem('uniq')
         });
         closeButton.addEventListener('click', (event) => {
             event.preventDefault();
             modal.style.display = "flex";
         });
         confirmExitBtn.addEventListener('click', () => {
+            fetch(`${url}/exit`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({user_id: localStorage.getItem('user_id')})
+            })
             window.location.href = `/?uniq=${localStorage.getItem('uniq')}`;
         });
         cancelExitBtn.addEventListener('click', () => {
