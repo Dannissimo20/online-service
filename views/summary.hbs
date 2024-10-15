@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Example</title>
+  <link rel="icon" type="image/x-icon" href="https://i.ibb.co/Q9RddYC/image.png">
+
+  <title>Telebon</title>
     <style>
         * {
             margin: 0;
@@ -462,7 +464,7 @@
             servicesContainer.appendChild(serviceElement);
         });
         var phoneInput = document.querySelector('.phone')
-        phoneInput.addEventListener('keydown', function(event) {
+        phoneInput.addEventListener('input', function(event) {
             if( !(event.key == 'ArrowLeft' || event.key == 'ArrowRight' || event.key == 'Backspace' || event.key == 'Tab')) { event.preventDefault() }
             var mask = '+7 (111) 111-11-11'; // Задаем маску
 

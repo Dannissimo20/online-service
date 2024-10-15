@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calendar View</title>
+  <link rel="icon" type="image/x-icon" href="https://i.ibb.co/Q9RddYC/image.png">
+    <title>Telebon</title>
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
     <style>
         * {
@@ -11,10 +12,18 @@
             margin: 0;
             box-sizing: border-box;
         }
+        a, button {
+          outline: none;
+          box-shadow: none;
+        }
 
         body {
             font-family: Arial, sans-serif;
             background: #F5F6F8;
+            scroll-behavior: smooth;
+            @media screen and (max-width: 767px) {
+              background: transparent;
+            }
         }
 
         .image-wrapper {
@@ -25,6 +34,10 @@
                 height: 100%;
                 object-fit: cover;
             }
+          @media screen and (max-width: 767px) {
+            height: 245px;
+
+          }
         }
 
         .container {
@@ -79,6 +92,10 @@
             color: #484848;
             margin-top: 8px;
             margin-bottom: 8px;
+          @media screen and (max-width: 767px) {
+            font-size: 24px;
+            margin-bottom: 0;
+          }
         }
 
         .logo_description {
@@ -102,14 +119,23 @@
             border-radius: 10px;
             text-align: center;
             cursor: pointer;
+          max-height: 42px;
+          overflow: hidden;
         }
 
-        .service-category-item p {
+        .service-category-item a {
             font-size: 14px;
             font-weight: 500;
             line-height: 20px;
+          border-radius: 10px;
             text-align: center;
             color: #fff;
+            text-decoration: none;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          overflow: hidden;
+          display: block;
+          position: relative;
         }
 
         .service {
@@ -141,6 +167,7 @@
             color: #383734;
         }
 
+
         .service-description {
             font-size: 14px;
             line-height: 16px;
@@ -165,8 +192,10 @@
         .service-left {
             display: flex;
             flex-direction: column;
-            flex: 0.7
+            flex: 0.7;
+            margin-right: 16px
         }
+
 
         .service-right {
             display: flex;
@@ -183,6 +212,8 @@
                 align-items: center;
                 justify-content: center;
                 width: 83px;
+              min-width: 83px;
+              max-width: 83px;
                 background: #00A3AD;
                 color: #fff;
                 border-radius: 7px;
@@ -199,13 +230,23 @@
 
         .service-category p {
             margin: 5px 0;
-            max-height: 32px;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: normal;
-            max-width: 176px;
+            font-size: 16px;
         }
-
+        .service-item-image{
+          width: 100%;
+          height: 150px;
+          border-radius: 8px;
+          overflow: hidden;
+          margin-bottom: 12px;
+        }
+        .service-item-image img{
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
         .service-item {
             display: flex;
             align-items: flex-start;
@@ -219,16 +260,15 @@
         }
 
         .service-category {
-            transition: max-height 0.5s ease, padding 0.5s ease;
-            overflow: hidden;
-            max-height: 0;
-            opacity: 0;
+          transition: max-height 0.7s ease, padding 0.7s ease, opacity 0.7s ease;
+          overflow: hidden;
+          max-height: 0;
+          opacity: 0;
         }
 
         .service-category.expanded {
-            max-height: 500px;
-            opacity: 1;
-
+          max-height: 500px;
+          opacity: 1;
         }
 
         .rotate-svg {
@@ -255,15 +295,13 @@
             <div class="logo">
                 {{#if filial_logo_exist}}
                     <img src="{{filial_logo}}" alt="no-image"/>
+                  {{else}}
+                  <img src="https://i.ibb.co/Qc2Xb0p/Frame-2082.png" alt="Frame-2082" border="0">
                 {{/if}}
             </div>
             <div class="header-title">
                 <h1 class="logo_title">{{filial_name}}</h1>
-                <svg width="20" height="12" viewBox="0 0 20 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd" clip-rule="evenodd"
-                          d="M19.0685 0.945188C19.6543 1.53094 19.6543 2.48074 19.0685 3.06652L11.0685 11.0665C10.4827 11.6523 9.53293 11.6523 8.94715 11.0665L0.947159 3.06652C0.361364 2.48074 0.361364 1.53094 0.947159 0.945188C1.53294 0.359438 2.48269 0.359438 3.06847 0.945188L10.0078 7.88453L16.9472 0.945188C17.533 0.359438 18.4828 0.359438 19.0685 0.945188Z"
-                          fill="#AAAAAA"/>
-                </svg>
+
 
             </div>
             <p class="logo_description">{{filial_address}}, {{filial_comment}}</p>
@@ -295,7 +333,7 @@
         categories.forEach(category => {
             const slide = document.createElement('div');
             slide.className = 'swiper-slide service-category-item';
-            slide.innerHTML = `<p>${category.name}</p>`;
+            slide.innerHTML = `<a href='#${category.name}'>${category.name}</a>`;
             swiperWrapper.appendChild(slide);
         });
     }
@@ -314,7 +352,7 @@
                 maximumFractionDigits: 2
             });
 
-            titleElement.innerHTML = `<div class="service-category-header">
+            titleElement.innerHTML = `<div class="service-category-header" id='${category.name}'>
                                         <h1 class="service-category-title">${category.name}</h1>
                                         <svg class="toggle-svg" width="20" height="11" viewBox="0 0 20 11" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M17.7388 10.5803C17.8863 10.7323 18.0862 10.8225 18.2979 10.8325C18.5095 10.8425 18.717 10.7714 18.8781 10.6339C19.0393 10.4963 19.1419 10.3025 19.1653 10.0919C19.1886 9.88136 19.1309 9.66978 19.0038 9.50026L18.9355 9.42109L11.0322 1.27109C10.7805 1.01002 10.439 0.85443 10.0769 0.83586C9.7148 0.81729 9.35917 0.937135 9.08216 1.17109L8.97716 1.26942L1.07216 9.42109C0.924114 9.57316 0.839672 9.77599 0.836058 9.98819C0.832445 10.2004 0.909932 10.406 1.05271 10.563C1.19549 10.72 1.3928 10.8167 1.60439 10.8332C1.81598 10.8497 2.0259 10.7849 2.19132 10.6519L2.26882 10.5811L10.0038 2.60442L17.7388 10.5803Z" fill="#C2C2C2"/>
@@ -339,22 +377,28 @@
                 if(parseInt(service.duration) > 60){
                     duration = `${Math.floor(parseInt(service.duration) / 60)} ч ${parseInt(service.duration) % 60} мин`
                 }
-                serviceElement.innerHTML = `
-                        <div class="service-item">
-                            <div class="service-left">
-                                <p class="service-title">${service.name}</p>
-                                ${service.comment}
-                            </div>
-                            <div class="service-right">
-                                <div>
-                                    <p class="service-price">${price}</p>
-                                    <p class="service-duration">${duration}</p>
-                                </div>
-                                <a href="/booking/${service.id}/${localStorage.getItem('user_id')}">Записаться</a>
-                            </div>
-                        </div>
-                        `;
-                servicesElement.appendChild(serviceElement);
+              serviceElement.innerHTML = `
+    <div class="service-item-wrapper">
+        ${service.images ? `<div class='service-item-image'>
+                              <img src='${service.images}' alt="Service Image" />
+                            </div>` : ''}
+        <div class='service-item'>
+            <div class="service-left">
+                <p class="service-title">${service.name}</p>
+                <p class="service-description">${service.comment}</p>
+            </div>
+            <div class="service-right">
+                <div>
+                    <p class="service-price">${price}</p>
+                    <p class="service-duration">${duration}</p>
+                </div>
+                <a href="/booking/${service.id}/${localStorage.getItem('user_id')}">Записаться</a>
+            </div>
+        </div>
+    </div>
+`;
+
+              servicesElement.appendChild(serviceElement);
             });
 
             categoryElement.appendChild(titleElement);
