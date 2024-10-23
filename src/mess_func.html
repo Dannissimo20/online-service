@@ -1,0 +1,393 @@
+<h1 id="-">Функционал мессенджера</h1>
+<h2 id="-">Общие функции</h2>
+<ul>
+<li>Отдельный чат с тех поддержкой<blockquote>
+<p>Формируется автоматически для каждого пользователя после регистрации</p>
+</blockquote>
+</li>
+<li>Отдельный чат с уведомлениями о новых/отмененных/подтвержденных записях созданных через бота</li>
+<li>Отдельный чат с уведомлениями о новых записях созданных через онлайн-запись</li>
+<li>Отслеживание непрочитанных сообщений</li>
+<li>Отправление пуша сотруднику при поступлении нового сообщения</li>
+<li>Получение списка чатов при установке WebSocket соединения</li>
+<li>Хранение токена бота тех поддержки<blockquote>
+<p>dev: &quot;6326079925:AAFbnXcr-zx5Is_lzhg8dK02hMp1PdwFxY4&quot;
+prod: &quot;6948200427:AAE70sYf3SZTFkAikD2wv5ZsIZojv8cfCR8&quot;</p>
+</blockquote>
+</li>
+</ul>
+<hr>
+<h2 id="-">Чаты</h2>
+<p>Функции</p>
+<ul>
+<li><p>Получение списка чатов
+  Ответ:</p>
+<pre><code class="lang-json">  {
+      <span class="hljs-string">"type"</span>:<span class="hljs-string">"chat_list"</span>,
+      <span class="hljs-string">"data"</span>:[
+          {
+              <span class="hljs-string">"chat_id"</span>:<span class="hljs-string">""</span>,
+              <span class="hljs-string">"chat_name"</span>:<span class="hljs-string">""</span>,
+              <span class="hljs-string">"users"</span>:[
+                  {
+                      <span class="hljs-string">"user_id"</span>:<span class="hljs-string">""</span>
+                  },
+                  {
+                      <span class="hljs-string">"user_id"</span>:<span class="hljs-string">""</span>
+                  },
+                  ...
+              ],
+              <span class="hljs-string">"IsGroupChat"</span>:<span class="hljs-literal">false</span>,
+              <span class="hljs-string">"lastest_message"</span>:<span class="hljs-string">""</span>, <span class="hljs-comment">// текст последнего сообщения</span>
+              <span class="hljs-string">"group_admin"</span>:<span class="hljs-string">""</span>, <span class="hljs-comment">// user_id администратора группового чата</span>
+              <span class="hljs-string">"is_tech_support"</span>:<span class="hljs-literal">false</span>, <span class="hljs-comment">// является ли чат чатом с тех поддержкой</span>
+              <span class="hljs-string">"is_telegram_chat"</span>:<span class="hljs-literal">false</span>, <span class="hljs-comment">// является ли чат чатом с уведомлениями от бота</span>
+              <span class="hljs-string">"unread"</span>:<span class="hljs-number">0</span>, <span class="hljs-comment">// количество непрочитанных сообщений</span>
+              <span class="hljs-string">"created_at"</span>:<span class="hljs-string">""</span>, <span class="hljs-comment">// временная метка создания чата</span>
+              <span class="hljs-string">"updated_at"</span>:<span class="hljs-string">""</span> <span class="hljs-comment">// временнная метка обновления чата (например переименование)</span>
+          },
+          ...
+      ]
+  }
+</code></pre>
+</li>
+<li><p>Создание чата двух человек
+  Запрос:</p>
+<pre><code class="lang-json">  {
+      <span class="hljs-attr">"type"</span>:<span class="hljs-string">"create_chat"</span>,
+      <span class="hljs-attr">"data"</span>:{
+          <span class="hljs-attr">"created_by_user_id"</span>:<span class="hljs-string">""</span>,
+          <span class="hljs-attr">"with_user_id"</span>:[
+              {
+                  <span class="hljs-attr">"user_id"</span>:<span class="hljs-string">""</span>
+              }
+          ],
+          <span class="hljs-attr">"chat_name"</span>:<span class="hljs-string">""</span>
+      }
+  }
+</code></pre>
+<p>  Ответ:</p>
+<pre><code class="lang-json">  {
+      <span class="hljs-string">"type"</span>:<span class="hljs-string">"chat_list"</span>,
+      <span class="hljs-string">"data"</span>:[
+          {
+              <span class="hljs-string">"chat_id"</span>:<span class="hljs-string">""</span>,
+              <span class="hljs-string">"chat_name"</span>:<span class="hljs-string">""</span>,
+              <span class="hljs-string">"users"</span>:[
+                  {
+                      <span class="hljs-string">"user_id"</span>:<span class="hljs-string">""</span>
+                  },
+                  {
+                      <span class="hljs-string">"user_id"</span>:<span class="hljs-string">""</span>
+                  },
+                  ...
+              ],
+              <span class="hljs-string">"IsGroupChat"</span>:<span class="hljs-literal">false</span>,
+              <span class="hljs-string">"lastest_message"</span>:<span class="hljs-string">""</span>, <span class="hljs-comment">// текст последнего сообщения</span>
+              <span class="hljs-string">"group_admin"</span>:<span class="hljs-string">""</span>, <span class="hljs-comment">// user_id администратора группового чата</span>
+              <span class="hljs-string">"is_tech_support"</span>:<span class="hljs-literal">false</span>, <span class="hljs-comment">// является ли чат чатом с тех поддержкой</span>
+              <span class="hljs-string">"is_telegram_chat"</span>:<span class="hljs-literal">false</span>, <span class="hljs-comment">// является ли чат чатом с уведомлениями от бота</span>
+              <span class="hljs-string">"unread"</span>:<span class="hljs-number">0</span>, <span class="hljs-comment">// количество непрочитанных сообщений</span>
+              <span class="hljs-string">"created_at"</span>:<span class="hljs-string">""</span>, <span class="hljs-comment">// временная метка создания чата</span>
+              <span class="hljs-string">"updated_at"</span>:<span class="hljs-string">""</span> <span class="hljs-comment">// временнная метка обновления чата (например переименование)</span>
+          },
+          ...
+      ]
+  }
+</code></pre>
+</li>
+<li><p>Создание группового чата</p>
+<pre><code class="lang-json">  {
+      <span class="hljs-attr">"type"</span>:<span class="hljs-string">"create_chat"</span>,
+      <span class="hljs-attr">"data"</span>:{
+          <span class="hljs-attr">"created_by_user_id"</span>:<span class="hljs-string">""</span>,
+          <span class="hljs-attr">"with_user_id"</span>:[
+              {
+                  <span class="hljs-attr">"user_id"</span>:<span class="hljs-string">""</span>
+              },
+              {
+                  <span class="hljs-attr">"user_id"</span>:<span class="hljs-string">""</span>
+              },
+              ...
+          ],
+          <span class="hljs-attr">"chat_name"</span>:<span class="hljs-string">""</span>
+      }
+  }
+</code></pre>
+<p>  Ответ:</p>
+<pre><code class="lang-json">  {
+      <span class="hljs-string">"type"</span>:<span class="hljs-string">"chat_list"</span>,
+      <span class="hljs-string">"data"</span>:[
+          {
+              <span class="hljs-string">"chat_id"</span>:<span class="hljs-string">""</span>,
+              <span class="hljs-string">"chat_name"</span>:<span class="hljs-string">""</span>,
+              <span class="hljs-string">"users"</span>:[
+                  {
+                      <span class="hljs-string">"user_id"</span>:<span class="hljs-string">""</span>
+                  },
+                  {
+                      <span class="hljs-string">"user_id"</span>:<span class="hljs-string">""</span>
+                  },
+                  {
+                      <span class="hljs-string">"user_id"</span>:<span class="hljs-string">""</span>
+                  },
+                  ...
+              ],
+              <span class="hljs-string">"IsGroupChat"</span><span class="hljs-symbol">:false</span>,
+              <span class="hljs-string">"lastest_message"</span>:<span class="hljs-string">""</span>, // текст последнего сообщения
+              <span class="hljs-string">"group_admin"</span>:<span class="hljs-string">""</span>, // user_id администратора группового чата
+              <span class="hljs-string">"is_tech_support"</span><span class="hljs-symbol">:false</span>, // является ли чат чатом с тех поддержкой
+              <span class="hljs-string">"is_telegram_chat"</span><span class="hljs-symbol">:false</span>, // является ли чат чатом с уведомлениями от бота
+              <span class="hljs-string">"unread"</span>:<span class="hljs-number">0</span>, // количество непрочитанных сообщений
+              <span class="hljs-string">"created_at"</span>:<span class="hljs-string">""</span>, // временная метка создания чата
+              <span class="hljs-string">"updated_at"</span>:<span class="hljs-string">""</span> // временнная метка обновления чата (например переименование)
+          },
+          ...
+      ]
+  }
+</code></pre>
+</li>
+<li><p>Добавление пользователя в групповой чат
+  Не реализовано</p>
+</li>
+<li><p>Удаление чата
+  Запрос:</p>
+<pre><code class="lang-json">  {
+      <span class="hljs-attr">"type"</span>:<span class="hljs-string">"delete_chat"</span>,
+      <span class="hljs-attr">"data"</span>:{
+          <span class="hljs-attr">"chat_id"</span>:<span class="hljs-string">""</span>
+      }
+  }
+</code></pre>
+<p>  Ответ:</p>
+<pre><code class="lang-json">  {
+      <span class="hljs-string">"type"</span>:<span class="hljs-string">"chat_list"</span>,
+      <span class="hljs-string">"data"</span>:[
+          {
+              <span class="hljs-string">"chat_id"</span>:<span class="hljs-string">""</span>,
+              <span class="hljs-string">"chat_name"</span>:<span class="hljs-string">""</span>,
+              <span class="hljs-string">"users"</span>:[
+                  {
+                      <span class="hljs-string">"user_id"</span>:<span class="hljs-string">""</span>
+                  },
+                  {
+                      <span class="hljs-string">"user_id"</span>:<span class="hljs-string">""</span>
+                  },
+                  ...
+              ],
+              <span class="hljs-string">"IsGroupChat"</span>:<span class="hljs-literal">false</span>,
+              <span class="hljs-string">"lastest_message"</span>:<span class="hljs-string">""</span>, <span class="hljs-comment">// текст последнего сообщения</span>
+              <span class="hljs-string">"group_admin"</span>:<span class="hljs-string">""</span>, <span class="hljs-comment">// user_id администратора группового чата</span>
+              <span class="hljs-string">"is_tech_support"</span>:<span class="hljs-literal">false</span>, <span class="hljs-comment">// является ли чат чатом с тех поддержкой</span>
+              <span class="hljs-string">"is_telegram_chat"</span>:<span class="hljs-literal">false</span>, <span class="hljs-comment">// является ли чат чатом с уведомлениями от бота</span>
+              <span class="hljs-string">"unread"</span>:<span class="hljs-number">0</span>, <span class="hljs-comment">// количество непрочитанных сообщений</span>
+              <span class="hljs-string">"created_at"</span>:<span class="hljs-string">""</span>, <span class="hljs-comment">// временная метка создания чата</span>
+              <span class="hljs-string">"updated_at"</span>:<span class="hljs-string">""</span> <span class="hljs-comment">// временнная метка обновления чата (например переименование)</span>
+          },
+          ...
+      ]
+  }
+</code></pre>
+</li>
+<li><p>Переименование чата
+  Запрос:</p>
+<pre><code class="lang-json">  {
+      <span class="hljs-attr">"type"</span>:<span class="hljs-string">"rename_chat"</span>,
+      <span class="hljs-attr">"data"</span>:{
+          <span class="hljs-attr">"chat_id"</span>:<span class="hljs-string">""</span>,
+          <span class="hljs-attr">"new_name"</span>:<span class="hljs-string">""</span>
+      }
+  }
+</code></pre>
+<p>  Ответ:</p>
+<pre><code class="lang-json">  {
+      <span class="hljs-string">"type"</span>:<span class="hljs-string">"chat_list"</span>,
+      <span class="hljs-string">"data"</span>:[
+          {
+              <span class="hljs-string">"chat_id"</span>:<span class="hljs-string">""</span>,
+              <span class="hljs-string">"chat_name"</span>:<span class="hljs-string">""</span>,
+              <span class="hljs-string">"users"</span>:[
+                  {
+                      <span class="hljs-string">"user_id"</span>:<span class="hljs-string">""</span>
+                  },
+                  {
+                      <span class="hljs-string">"user_id"</span>:<span class="hljs-string">""</span>
+                  },
+                  ...
+              ],
+              <span class="hljs-string">"IsGroupChat"</span>:<span class="hljs-literal">false</span>,
+              <span class="hljs-string">"lastest_message"</span>:<span class="hljs-string">""</span>, <span class="hljs-comment">// текст последнего сообщения</span>
+              <span class="hljs-string">"group_admin"</span>:<span class="hljs-string">""</span>, <span class="hljs-comment">// user_id администратора группового чата</span>
+              <span class="hljs-string">"is_tech_support"</span>:<span class="hljs-literal">false</span>, <span class="hljs-comment">// является ли чат чатом с тех поддержкой</span>
+              <span class="hljs-string">"is_telegram_chat"</span>:<span class="hljs-literal">false</span>, <span class="hljs-comment">// является ли чат чатом с уведомлениями от бота</span>
+              <span class="hljs-string">"unread"</span>:<span class="hljs-number">0</span>, <span class="hljs-comment">// количество непрочитанных сообщений</span>
+              <span class="hljs-string">"created_at"</span>:<span class="hljs-string">""</span>, <span class="hljs-comment">// временная метка создания чата</span>
+              <span class="hljs-string">"updated_at"</span>:<span class="hljs-string">""</span> <span class="hljs-comment">// временнная метка обновления чата (например переименование)</span>
+          },
+          ...
+      ]
+  }
+</code></pre>
+</li>
+</ul>
+<hr>
+<h2 id="-">Сообщения</h2>
+<p>Функции</p>
+<ul>
+<li><p>Получение списка сообщений для конкретного чата
+  Запрос:</p>
+<pre><code class="lang-json">  {
+      <span class="hljs-attr">"type"</span>:<span class="hljs-string">"get_chat_messages"</span>,
+      <span class="hljs-attr">"data"</span>:{
+          <span class="hljs-attr">"chat_id"</span>:<span class="hljs-string">""</span>
+      }
+  }
+</code></pre>
+<p>  Ответ:</p>
+<pre><code class="lang-json">  {
+      <span class="hljs-string">"type"</span>:<span class="hljs-string">"chat_messages"</span>,
+      <span class="hljs-string">"data"</span>:[
+          {
+              <span class="hljs-string">"id"</span>:<span class="hljs-string">""</span>,
+              <span class="hljs-string">"sender"</span>:<span class="hljs-string">""</span>, <span class="hljs-comment">// user_id отправителя</span>
+              <span class="hljs-string">"content"</span>:<span class="hljs-string">""</span>, <span class="hljs-comment">// текст сообщения</span>
+              <span class="hljs-string">"chat"</span>:{
+                  <span class="hljs-string">"chat_id"</span>:<span class="hljs-string">""</span>,
+                  <span class="hljs-string">"chat_name"</span>:<span class="hljs-string">""</span>,
+                  <span class="hljs-string">"users"</span>:[
+                      {
+                          <span class="hljs-string">"user_id"</span>:<span class="hljs-string">""</span>
+                      },
+                      {
+                          <span class="hljs-string">"user_id"</span>:<span class="hljs-string">""</span>
+                      },
+                      ...
+                  ],
+                  <span class="hljs-string">"IsGroupChat"</span>:<span class="hljs-literal">false</span>,
+                  <span class="hljs-string">"lastest_message"</span>:<span class="hljs-string">""</span>, <span class="hljs-comment">// текст последнего сообщения</span>
+                  <span class="hljs-string">"group_admin"</span>:<span class="hljs-string">""</span>, <span class="hljs-comment">// user_id администратора группового чата</span>
+                  <span class="hljs-string">"is_tech_support"</span>:<span class="hljs-literal">false</span>, <span class="hljs-comment">// является ли чат чатом с тех поддержкой</span>
+                  <span class="hljs-string">"is_telegram_chat"</span>:<span class="hljs-literal">false</span>, <span class="hljs-comment">// является ли чат чатом с уведомлениями от бота</span>
+                  <span class="hljs-string">"unread"</span>:<span class="hljs-number">0</span>, <span class="hljs-comment">// количество непрочитанных сообщений</span>
+                  <span class="hljs-string">"created_at"</span>:<span class="hljs-string">""</span>, <span class="hljs-comment">// временная метка создания чата</span>
+                  <span class="hljs-string">"updated_at"</span>:<span class="hljs-string">""</span> <span class="hljs-comment">// временнная метка обновления чата (например переименование)</span>
+              },
+              <span class="hljs-string">"is_read"</span>:<span class="hljs-literal">true</span>, <span class="hljs-comment">// прочитано ли сообщение,</span>
+              <span class="hljs-string">"created_at"</span>:<span class="hljs-string">""</span>, <span class="hljs-comment">// временная метка создания сообщения</span>
+              <span class="hljs-string">"updated_at"</span>:<span class="hljs-string">""</span> <span class="hljs-comment">// временнная метка обновления сообщения</span>
+          }
+      ]
+  }
+</code></pre>
+<pre><code class="lang-json">  {
+      <span class="hljs-string">"type"</span>:<span class="hljs-string">"chat_list"</span>,
+      <span class="hljs-string">"data"</span>:[
+          {
+              <span class="hljs-string">"chat_id"</span>:<span class="hljs-string">""</span>,
+              <span class="hljs-string">"chat_name"</span>:<span class="hljs-string">""</span>,
+              <span class="hljs-string">"users"</span>:[
+                  {
+                      <span class="hljs-string">"user_id"</span>:<span class="hljs-string">""</span>
+                  },
+                  {
+                      <span class="hljs-string">"user_id"</span>:<span class="hljs-string">""</span>
+                  },
+                  ...
+              ],
+              <span class="hljs-string">"IsGroupChat"</span>:<span class="hljs-literal">false</span>,
+              <span class="hljs-string">"lastest_message"</span>:<span class="hljs-string">""</span>, <span class="hljs-comment">// текст последнего сообщения</span>
+              <span class="hljs-string">"group_admin"</span>:<span class="hljs-string">""</span>, <span class="hljs-comment">// user_id администратора группового чата</span>
+              <span class="hljs-string">"is_tech_support"</span>:<span class="hljs-literal">false</span>, <span class="hljs-comment">// является ли чат чатом с тех поддержкой</span>
+              <span class="hljs-string">"is_telegram_chat"</span>:<span class="hljs-literal">false</span>, <span class="hljs-comment">// является ли чат чатом с уведомлениями от бота</span>
+              <span class="hljs-string">"unread"</span>:<span class="hljs-number">0</span>, <span class="hljs-comment">// количество непрочитанных сообщений</span>
+              <span class="hljs-string">"created_at"</span>:<span class="hljs-string">""</span>, <span class="hljs-comment">// временная метка создания чата</span>
+              <span class="hljs-string">"updated_at"</span>:<span class="hljs-string">""</span> <span class="hljs-comment">// временнная метка обновления чата (например переименование)</span>
+          },
+          ...
+      ]
+  }
+</code></pre>
+</li>
+<li><p>Отправка текстового сообщения
+  Запрос:</p>
+<pre><code class="lang-json">  {
+      <span class="hljs-string">"type"</span>:<span class="hljs-string">"send_message"</span>,
+      <span class="hljs-string">"data"</span>:{
+          <span class="hljs-string">"chat_id"</span>:<span class="hljs-string">""</span>,
+          <span class="hljs-string">"sender_id"</span>:<span class="hljs-string">""</span>, <span class="hljs-comment">// user_id отправителя</span>
+          <span class="hljs-string">"content"</span>:<span class="hljs-string">""</span>, <span class="hljs-comment">// текст сообщения</span>
+          <span class="hljs-string">"sender_fio"</span>:<span class="hljs-string">""</span> <span class="hljs-comment">// ФИО отправителя (нужно для отправки уведомленния в чат с техподдержкой)</span>
+      }
+  }
+</code></pre>
+<p>  Ответ:</p>
+<pre><code class="lang-json">  {
+      <span class="hljs-string">"type"</span>:<span class="hljs-string">"chat_list"</span>,
+      <span class="hljs-string">"data"</span>:[
+          {
+              <span class="hljs-string">"chat_id"</span>:<span class="hljs-string">""</span>,
+              <span class="hljs-string">"chat_name"</span>:<span class="hljs-string">""</span>,
+              <span class="hljs-string">"users"</span>:[
+                  {
+                      <span class="hljs-string">"user_id"</span>:<span class="hljs-string">""</span>
+                  },
+                  {
+                      <span class="hljs-string">"user_id"</span>:<span class="hljs-string">""</span>
+                  },
+                  ...
+              ],
+              <span class="hljs-string">"IsGroupChat"</span>:<span class="hljs-literal">false</span>,
+              <span class="hljs-string">"lastest_message"</span>:<span class="hljs-string">""</span>, <span class="hljs-comment">// текст последнего сообщения</span>
+              <span class="hljs-string">"group_admin"</span>:<span class="hljs-string">""</span>, <span class="hljs-comment">// user_id администратора группового чата</span>
+              <span class="hljs-string">"is_tech_support"</span>:<span class="hljs-literal">false</span>, <span class="hljs-comment">// является ли чат чатом с тех поддержкой</span>
+              <span class="hljs-string">"is_telegram_chat"</span>:<span class="hljs-literal">false</span>, <span class="hljs-comment">// является ли чат чатом с уведомлениями от бота</span>
+              <span class="hljs-string">"unread"</span>:<span class="hljs-number">0</span>, <span class="hljs-comment">// количество непрочитанных сообщений</span>
+              <span class="hljs-string">"created_at"</span>:<span class="hljs-string">""</span>, <span class="hljs-comment">// временная метка создания чата</span>
+              <span class="hljs-string">"updated_at"</span>:<span class="hljs-string">""</span> <span class="hljs-comment">// временнная метка обновления чата (например переименование)</span>
+          },
+          ...
+      ]
+  }
+</code></pre>
+<pre><code class="lang-json">  {
+      <span class="hljs-string">"type"</span>:<span class="hljs-string">"chat_messages"</span>,
+      <span class="hljs-string">"data"</span>:[
+          {
+              <span class="hljs-string">"id"</span>:<span class="hljs-string">""</span>,
+              <span class="hljs-string">"sender"</span>:<span class="hljs-string">""</span>, <span class="hljs-comment">// user_id отправителя</span>
+              <span class="hljs-string">"content"</span>:<span class="hljs-string">""</span>, <span class="hljs-comment">// текст сообщения</span>
+              <span class="hljs-string">"chat"</span>:{
+                  <span class="hljs-string">"chat_id"</span>:<span class="hljs-string">""</span>,
+                  <span class="hljs-string">"chat_name"</span>:<span class="hljs-string">""</span>,
+                  <span class="hljs-string">"users"</span>:[
+                      {
+                          <span class="hljs-string">"user_id"</span>:<span class="hljs-string">""</span>
+                      },
+                      {
+                          <span class="hljs-string">"user_id"</span>:<span class="hljs-string">""</span>
+                      },
+                      ...
+                  ],
+                  <span class="hljs-string">"IsGroupChat"</span>:<span class="hljs-literal">false</span>,
+                  <span class="hljs-string">"lastest_message"</span>:<span class="hljs-string">""</span>, <span class="hljs-comment">// текст последнего сообщения</span>
+                  <span class="hljs-string">"group_admin"</span>:<span class="hljs-string">""</span>, <span class="hljs-comment">// user_id администратора группового чата</span>
+                  <span class="hljs-string">"is_tech_support"</span>:<span class="hljs-literal">false</span>, <span class="hljs-comment">// является ли чат чатом с тех поддержкой</span>
+                  <span class="hljs-string">"is_telegram_chat"</span>:<span class="hljs-literal">false</span>, <span class="hljs-comment">// является ли чат чатом с уведомлениями от бота</span>
+                  <span class="hljs-string">"unread"</span>:<span class="hljs-number">0</span>, <span class="hljs-comment">// количество непрочитанных сообщений</span>
+                  <span class="hljs-string">"created_at"</span>:<span class="hljs-string">""</span>, <span class="hljs-comment">// временная метка создания чата</span>
+                  <span class="hljs-string">"updated_at"</span>:<span class="hljs-string">""</span> <span class="hljs-comment">// временнная метка обновления чата (например переименование)</span>
+              },
+              <span class="hljs-string">"is_read"</span>:<span class="hljs-literal">true</span>, <span class="hljs-comment">// прочитано ли сообщение,</span>
+              <span class="hljs-string">"created_at"</span>:<span class="hljs-string">""</span>, <span class="hljs-comment">// временная метка создания сообщения</span>
+              <span class="hljs-string">"updated_at"</span>:<span class="hljs-string">""</span> <span class="hljs-comment">// временнная метка обновления сообщения</span>
+          }
+      ]
+  }
+</code></pre>
+</li>
+<li><p>Отправка сообщения с картинкой
+  Не реализовано</p>
+</li>
+<li>Редактирование сообщения
+  Не реализовано</li>
+</ul>

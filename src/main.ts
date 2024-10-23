@@ -3,12 +3,10 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
 import { join } from 'path';
 import { AppModule } from './app.module';
-import {config} from "./config";
+import { config } from '../config';
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(
-      AppModule,
-  );
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   const corsOptions: CorsOptions = {
     origin: '*',
@@ -18,7 +16,7 @@ async function bootstrap() {
   };
 
   app.useStaticAssets(join(__dirname, '..', 'public'));
-  app.setBaseViewsDir(join(__dirname, '..', 'views'));
+  app.setBaseViewsDir(join(__dirname, '..', '../views'));
   app.setViewEngine('hbs');
 
   app.enableCors(corsOptions);

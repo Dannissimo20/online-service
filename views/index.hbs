@@ -304,7 +304,7 @@
 
 
             </div>
-            <p class="logo_description">{{filial_address}}, {{filial_comment}}</p>
+            <p class="logo_description">{{filial_address}}</p>
         </div>
         <div class="service-items-container">
             <div class="swiper-container">
@@ -374,8 +374,11 @@
                     price = `от ${currencyFormatter.format(parseInt(service.tarif))}`
                 }
                 let duration = `${service.duration} мин`
-                if(parseInt(service.duration) > 60){
-                    duration = `${Math.floor(parseInt(service.duration) / 60)} ч ${parseInt(service.duration) % 60} мин`
+                if(parseInt(service.duration) >= 60){
+                    if (parseInt(service.duration) % 60 !== 0) 
+                        duration = `${Math.floor(parseInt(service.duration) / 60)} ч ${parseInt(service.duration) % 60} м`
+                    else
+                        duration = `${Math.floor(parseInt(service.duration) / 60)} ч`
                 }
               serviceElement.innerHTML = `
     <div class="service-item-wrapper">

@@ -189,23 +189,8 @@
 </div>
 
 <script>
-    // const employees = [
-    //     {
-    //         id: '1233',
-    //         fio: "Илья Сергеев",
-    //         position: "Барбер",
-    //         status: "Доступен",
-    //         avatar: "https://images.unsplash.com/photo-1721406769891-f2ba651401d9?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-    //     },
-    //     {
-    //         id: '1213',
-    //         fio: "Сергей Сергеевич",
-    //         status: "Доступен",
-    //     }
-    // ];
 
     const employees = {{{employees}}};
-    //const url = 'http://localhost:3000';
     const url = "{{url}}";
 
     const employeeList = document.querySelector('.employee-list');
@@ -291,8 +276,6 @@
                                 {
                                     if(data.message === "Success")
                                     {
-                                        //console.log("Время старта "+data.time_start)
-                                        //console.log("Время старта "+TIME_START)
                                         TIME_END = 20;
                                         INTERVAL = 30;
                                         TIME_START = 10;

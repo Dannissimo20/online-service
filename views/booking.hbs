@@ -443,8 +443,10 @@
         const changeEmployeeButton = document.getElementById('change-employee-button');
         const today = new Date();
         const url = "{{url}}";
-      const nextButton = document.getElementById('nextButton');
-      let selectedDay = null;
+        const nextButton = document.getElementById('nextButton');
+        const chosen_date = "{{chosen_date}}";
+        const chosen_time = "{{chosen_time}}";
+      let selectedDay = chosen_date;
       let selectedTime1 = null;
 
       function updateButtonState() {
@@ -465,8 +467,38 @@
         // Время окончания
         let TIME_END = 20;
 
-        const chosen_date = "{{chosen_date}}";
-        const chosen_time = "{{chosen_time}}";
+        
+        
+        fetch(`${url}/booking/choose_day`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({user_id: localStorage.getItem('user_id'), date: new Date(chosen_date).toISOString()})
+        })
+        .then(response => response.json())
+        .then(data =>
+        {
+            if(data.message === "Success")
+            {
+                //console.log("Время старта "+data.time_start)
+                //console.log("Время старта "+TIME_START)
+                TIME_END = 20;
+                INTERVAL = 30;
+                TIME_START = 10;
+                const tim = JSON.parse(data.times)
+                renderTimeSlider(tim)
+                updateButtonState();
+            }
+        });
+
+        /*fetch(`${url}/booking/choose_time`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({time: chosen_time, duration: duration, user_id: localStorage.getItem('user_id')})
+        })*/
 
         const currencyFormatter = new Intl.NumberFormat('ru-RU', {
             style: 'currency',
