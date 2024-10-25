@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/x-icon" href="https://i.ibb.co/Q9RddYC/image.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
 
   <title>Telebon</title>
     <style>
@@ -11,6 +14,7 @@
             padding: 0;
             margin: 0;
             box-sizing: border-box;
+          font-family: "Inter", sans-serif;
         }
         body {
             font-family: Arial, sans-serif;
@@ -204,7 +208,7 @@
                 </div>
             </div>
         </div>
-        <button class="next_button">Продолжить</button>
+        <button class="next_button">Отлично</button>
     </div>
 </div>
 
@@ -234,8 +238,8 @@
     const currencyFormatter = new Intl.NumberFormat('ru-RU', {
         style: 'currency',
         currency: 'RUB',
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
     });
     function calculateTotalPrice(services) {
         return services.reduce((total, service) => total + parseFloat(service.tarif), 0);

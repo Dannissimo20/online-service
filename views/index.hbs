@@ -1,386 +1,400 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/x-icon" href="https://i.ibb.co/Q9RddYC/image.png">
-    <title>Telebon</title>
-    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
-    <style>
-        * {
-            padding: 0;
-            margin: 0;
-            box-sizing: border-box;
-        }
-        a, button {
-          outline: none;
-          box-shadow: none;
-        }
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+  <title>Telebon</title>
+  <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+      box-sizing: border-box;
+      font-family: "Inter", sans-serif;
+    }
+    a, button {
+      outline: none;
+      box-shadow: none;
+    }
 
-        body {
-            font-family: Arial, sans-serif;
-            background: #F5F6F8;
-            scroll-behavior: smooth;
-            @media screen and (max-width: 767px) {
-              background: transparent;
-            }
-        }
+    body {
+      font-family: Arial, sans-serif;
+      background: #F5F6F8;
+      scroll-behavior: smooth;
+      @media screen and (max-width: 767px) {
+        background: transparent;
+      }
+    }
 
-        .image-wrapper {
-            height: 382px;
+    .image-wrapper {
+      height: 382px;
 
-            > img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-            }
-          @media screen and (max-width: 767px) {
-            height: 245px;
+      > img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      @media screen and (max-width: 767px) {
+        height: 245px;
 
-          }
-        }
+      }
+    }
 
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-        }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+    }
 
-        .wrapper {
-            border-radius: 24px 24px 0 0;
-            background: #fff;
-            position: relative;
-            top: -124px;
-            padding: 16px;
+    .wrapper {
+      border-radius: 24px 24px 0 0;
+      background: #fff;
+      position: relative;
+      top: -124px;
+      padding: 16px;
 
-        }
+    }
 
-        .header {
-            top: -52px;
-            position: relative;
-        }
+    .header {
+      top: -52px;
+      position: relative;
+    }
 
-        .header-title {
-            cursor: pointer;
-            display: flex;
-            align-items: center;
+    .header-title {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
 
-            > svg {
-                margin-left: 12px;
-            }
-        }
+      > svg {
+        margin-left: 12px;
+      }
+    }
 
-        .logo {
-            width: 80px;
-            height: 80px;
-            background: purple;
-            border-radius: 50%;
-            position: relative;
-            overflow: hidden;
+    .logo {
+      width: 80px;
+      height: 80px;
+      background: purple;
+      border-radius: 50%;
+      position: relative;
+      overflow: hidden;
 
-            > img {
-                object-fit: cover;
-                position: absolute;
-                inset: 0;
-                width: 100%;
-                height: 100%;
-            }
-        }
+      > img {
+        object-fit: cover;
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+      }
+    }
 
-        .logo_title {
-            font-size: 32px;
-            line-height: 28px;
-            color: #484848;
-            margin-top: 8px;
-            margin-bottom: 8px;
-          @media screen and (max-width: 767px) {
-            font-size: 24px;
-            margin-bottom: 0;
-          }
-        }
+    .logo_title {
+      font-size: 32px;
+      line-height: 28px;
+      color: #484848;
+      margin-top: 8px;
+      margin-bottom: 8px;
+      @media screen and (max-width: 767px) {
+        font-size: 24px;
+        margin-bottom: 0;
+      }
+    }
 
-        .logo_description {
-            font-weight: 400;
-            font-size: 14px;
-            line-height: 20px;
-            color: #767676;
-        }
+    .logo_description {
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 20px;
+      color: #767676;
+    }
 
-        .service-items-container {
-            overflow: hidden;
-            position: relative;
-            max-width: 600px;
-            top: -30px;
-        }
+    .service-items-container {
+      overflow: hidden;
+      position: relative;
+      max-width: 600px;
+      top: -30px;
+    }
 
-        .service-category-item {
-            user-select: none;
-            padding: 11px;
-            background-color: #008BAA;
-            border-radius: 10px;
-            text-align: center;
-            cursor: pointer;
-          max-height: 42px;
-          overflow: hidden;
-        }
+    .service-category-item {
+      user-select: none;
+      padding: 11px;
+      background-color: #008BAA;
+      border-radius: 10px;
+      text-align: center;
+      cursor: pointer;
+      max-height: 42px;
+      overflow: hidden;
+      width: auto !important;
+    }
 
-        .service-category-item a {
-            font-size: 14px;
-            font-weight: 500;
-            line-height: 20px;
-          border-radius: 10px;
-            text-align: center;
-            color: #fff;
-            text-decoration: none;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          overflow: hidden;
-          display: block;
-          position: relative;
-        }
+    .service-category-item a {
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 20px;
+      border-radius: 10px;
+      text-align: center;
+      color: #fff;
+      text-decoration: none;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+      display: block;
+      position: relative;
+    }
 
-        .service {
-            margin-top: 17px;
-            margin-bottom: 24px;
-        }
+    .service {
+      margin-bottom: 24px;
+    }
 
-        .service-category-title {
-            font-size: 22px;
-            line-height: 28px;
-            color: #383734;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-            height: 62px;
-            border-radius: 10px;
-            transition: background-color 0.3s;
-        }
+    .service-category-title {
+      font-size: 22px;
+      line-height: 28px;
+      color: #383734;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      height: 62px;
+      border-radius: 10px;
+      transition: background-color 0.3s;
+    }
 
-        .service-category > div {
-            margin-bottom: 24px;
-        }
+    .service-category > div {
+      padding-bottom: 24px;
+      padding-top: 12px;
+      border-top: 1px solid #ebebeb;
+    }
 
-        .service-title {
-            font-size: 16px;
-            line-height: 20px;
-            font-weight: 400;
-            color: #383734;
-        }
-
-
-        .service-description {
-            font-size: 14px;
-            line-height: 16px;
-            color: #171717B2;
-            font-weight: 400;
-        }
-
-        .service-price {
-            font-size: 14px;
-            line-height: 18px;
-            letter-spacing: 0.09px;
-            color: #383734;
-        }
-
-        .service-duration {
-            line-height: 16px;
-            letter-spacing: 0.08px;
-            font-size: 12px;
-            color: #A9A9A9;
-        }
-
-        .service-left {
-            display: flex;
-            flex-direction: column;
-            flex: 0.7;
-            margin-right: 16px
-        }
+    .service-title {
+      font-size: 16px;
+      line-height: 20px;
+      font-weight: 400;
+      color: #383734;
+    }
 
 
-        .service-right {
-            display: flex;
-            margin-top: 16px;
-            align-items: center;
-            justify-content: flex-end;
-            flex: 0.3;
+    .service-description {
+      font-size: 14px !important;
+      line-height: 16px;
+      color: #171717B2;
+      font-weight: 400;
+      letter-spacing: -0.4px;
+    }
 
-            a {
-                height: 30px;
-                margin-left: 12px;
-                text-decoration: none;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                width: 83px;
-              min-width: 83px;
-              max-width: 83px;
-                background: #00A3AD;
-                color: #fff;
-                border-radius: 7px;
-                text-align: center;
-                font-size: 12px;
-                font-weight: 600;
-                letter-spacing: 0.08px;
-                line-height: 16px;
-                outline: none;
-                cursor: pointer;
-                border: none
-            }
-        }
+    .service-price {
+      font-size: 14px !important;
+      line-height: 18px;
+      letter-spacing: 0.09px;
+      color: #383734;
+      font-weight: 600;
+    }
 
-        .service-category p {
-            margin: 5px 0;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: normal;
-            font-size: 16px;
-        }
-        .service-item-image{
-          width: 100%;
-          height: 150px;
-          border-radius: 8px;
-          overflow: hidden;
-          margin-bottom: 12px;
-        }
-        .service-item-image img{
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-        }
-        .service-item {
-            display: flex;
-            align-items: flex-start;
-        }
+    .service-duration {
+      line-height: 16px;
+      letter-spacing: 0.08px;
+      font-size: 12px !important;
+      color: #A9A9A9;
+    }
 
-        .service-category-header {
-            display: flex;
-            cursor: pointer;
-            align-items: center;
-            justify-content: space-between;
-        }
+    .service-left {
+      display: flex;
+      flex-direction: column;
+      flex: 0.7;
+      margin-right: 16px
+    }
 
-        .service-category {
-          transition: max-height 0.7s ease, padding 0.7s ease, opacity 0.7s ease;
-          overflow: hidden;
-          max-height: 0;
-          opacity: 0;
-        }
 
-        .service-category.expanded {
-          max-height: 500px;
-          opacity: 1;
-        }
+    .service-right {
+      display: flex;
+      margin-top: 16px;
+      align-items: center;
+      justify-content: flex-end;
+      flex: 0.3;
 
-        .rotate-svg {
-            transform: rotate(180deg);
-        }
+      a {
+        height: 30px;
+        margin-left: 12px;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 89px;
+        min-width: 89px;
+        max-width: 89px;
+        background: #00A3AD;
+        color: #fff;
+        border-radius: 7px;
+        text-align: center;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.08px;
+        line-height: 16px;
+        outline: none;
+        cursor: pointer;
+        border: none
+      }
+    }
+    .service_bottom{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
 
-        .toggle-svg {
-            transition: .5s ease;
-        }
-    </style>
+    .service-category p {
+      margin: 5px 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: normal;
+      font-size: 16px;
+    }
+    .service-item-image{
+      width: 100%;
+      height: 150px;
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+    .service-item-image img{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .service-item {
+      display: flex;
+      align-items: center;
+    }
+
+    .service-category-header {
+      display: flex;
+      cursor: pointer;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .service-category {
+      transition: max-height 0.7s ease, padding 0.7s ease, opacity 0.7s ease;
+      overflow-y: auto;
+      overflow-x: hidden;
+      max-height: 0;
+      opacity: 0;
+    }
+
+    .service-category.expanded {
+      max-height: 5000px;
+      opacity: 1;
+    }
+
+    .rotate-svg {
+      transform: rotate(180deg);
+    }
+
+    .toggle-svg {
+      transition: .5s ease;
+    }
+  </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="image-wrapper">
-        {{#if filial_cover_exist}}
-            <img src="{{filial_cover}}" alt="no-image"/>
+  <div class="image-wrapper">
+    {{#if filial_cover_exist}}
+      <img src="{{filial_cover}}" alt="no-image"/>
+    {{else}}
+      <img src="https://i.ibb.co/BgN4pg2/ea1da5c57048e7cc526a7242d376221e.jpg" alt="no-image"/>
+    {{/if}}
+  </div>
+  <div class="wrapper">
+    <div class="header">
+      <div class="logo">
+        {{#if filial_logo_exist}}
+          <img src="{{filial_logo}}" alt="no-image"/>
         {{else}}
-            <img src="https://i.ibb.co/BgN4pg2/ea1da5c57048e7cc526a7242d376221e.jpg" alt="no-image"/>
+          <img src="https://i.ibb.co/Qc2Xb0p/Frame-2082.png" alt="Frame-2082" border="0">
         {{/if}}
-    </div>
-    <div class="wrapper">
-        <div class="header">
-            <div class="logo">
-                {{#if filial_logo_exist}}
-                    <img src="{{filial_logo}}" alt="no-image"/>
-                  {{else}}
-                  <img src="https://i.ibb.co/Qc2Xb0p/Frame-2082.png" alt="Frame-2082" border="0">
-                {{/if}}
-            </div>
-            <div class="header-title">
-                <h1 class="logo_title">{{filial_name}}</h1>
+      </div>
+      <div class="header-title">
+        <h1 class="logo_title">{{filial_name}}</h1>
 
 
-            </div>
-            <p class="logo_description">{{filial_address}}</p>
-        </div>
-        <div class="service-items-container">
-            <div class="swiper-container">
-                <div class="swiper-wrapper" id="service-category-items"></div>
-            </div>
-        </div>
-        <div class="service" id="services-container"></div>
+      </div>
+      <p class="logo_description">{{filial_address}}</p>
     </div>
+    <div class="service-items-container">
+      <div class="swiper-container">
+        <div class="swiper-wrapper" id="service-category-items"></div>
+      </div>
+    </div>
+    <div class="service" id="services-container"></div>
+  </div>
 </div>
 
 <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 <script>
-    // window.onbeforeunload = function() {
-    //     console.log("T,fnm")
-    //     return "Есть несохранённые изменения. Всё равно уходим?";
-    // };
+  // window.onbeforeunload = function() {
+  //     console.log("T,fnm")
+  //     return "Есть несохранённые изменения. Всё равно уходим?";
+  // };
 
-    localStorage.setItem("user_id", '{{user_id}}')
-    localStorage.setItem("uniq", "{{uniq}}")
+  localStorage.setItem("user_id", '{{user_id}}')
+  localStorage.setItem("uniq", "{{uniq}}")
 
-    const categories = {{{categories}}};
-    const services = {{{services}}};
+  const categories = {{{categories}}};
+  const services = {{{services}}};
 
-    function generateSwiperSlides() {
-        const swiperWrapper = document.getElementById('service-category-items');
-        categories.forEach(category => {
-            const slide = document.createElement('div');
-            slide.className = 'swiper-slide service-category-item';
-            slide.innerHTML = `<a href='#${category.name}'>${category.name}</a>`;
-            swiperWrapper.appendChild(slide);
-        });
-    }
+  function generateSwiperSlides() {
+    const swiperWrapper = document.getElementById('service-category-items');
+    categories.forEach(category => {
+      const slide = document.createElement('div');
+      slide.className = 'swiper-slide service-category-item';
+      slide.innerHTML = `<a href='#${category.name}'>${category.name}</a>`;
+      swiperWrapper.appendChild(slide);
+    });
+  }
 
-    function generateServices() {
-        const container = document.getElementById('services-container');
-        categories.forEach(category => {
-            const categoryElement = document.createElement('div');
-            const titleElement = document.createElement('h1');
-            const servicesElement = document.createElement('div');
+  function generateServices() {
+    const container = document.getElementById('services-container');
+    categories.forEach(category => {
+      const categoryElement = document.createElement('div');
+      const titleElement = document.createElement('h1');
+      const servicesElement = document.createElement('div');
 
-            const currencyFormatter = new Intl.NumberFormat('ru-RU', {
-                style: 'currency',
-                currency: 'RUB',
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
-            });
+      const currencyFormatter = new Intl.NumberFormat('ru-RU', {
+        style: 'currency',
+        currency: 'RUB',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
+      });
 
-            titleElement.innerHTML = `<div class="service-category-header" id='${category.name}'>
+      titleElement.innerHTML = `<div class="service-category-header" id='${category.name}'>
                                         <h1 class="service-category-title">${category.name}</h1>
                                         <svg class="toggle-svg" width="20" height="11" viewBox="0 0 20 11" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M17.7388 10.5803C17.8863 10.7323 18.0862 10.8225 18.2979 10.8325C18.5095 10.8425 18.717 10.7714 18.8781 10.6339C19.0393 10.4963 19.1419 10.3025 19.1653 10.0919C19.1886 9.88136 19.1309 9.66978 19.0038 9.50026L18.9355 9.42109L11.0322 1.27109C10.7805 1.01002 10.439 0.85443 10.0769 0.83586C9.7148 0.81729 9.35917 0.937135 9.08216 1.17109L8.97716 1.26942L1.07216 9.42109C0.924114 9.57316 0.839672 9.77599 0.836058 9.98819C0.832445 10.2004 0.909932 10.406 1.05271 10.563C1.19549 10.72 1.3928 10.8167 1.60439 10.8332C1.81598 10.8497 2.0259 10.7849 2.19132 10.6519L2.26882 10.5811L10.0038 2.60442L17.7388 10.5803Z" fill="#C2C2C2"/>
                                         </svg>
                                       </div>`;
-            titleElement.setAttribute('onclick', `toggleCategory('${category.id}')`);
+      titleElement.setAttribute('onclick', `toggleCategory('${category.id}')`);
 
-            servicesElement.className = 'service-category expanded';
-            servicesElement.id = category.id;
+      servicesElement.className = 'service-category expanded';
+      servicesElement.id = category.id;
 
-            services.filter(service => service.idparents === category.id).forEach(service => {
-                const serviceElement = document.createElement('div');
-                let serviceComment = `<p class="service-description">Без комментария</p>`
-                if (service.comment) {
-                    serviceComment = `<p class="service-description">${service.comment}</p>`
-                }
-                let price = `${currencyFormatter.format(parseInt(service.tarif))}`
-                if (!service.fixtarif) {
-                    price = `от ${currencyFormatter.format(parseInt(service.tarif))}`
-                }
-                let duration = `${service.duration} мин`
-                if(parseInt(service.duration) >= 60){
-                    if (parseInt(service.duration) % 60 !== 0) 
-                        duration = `${Math.floor(parseInt(service.duration) / 60)} ч ${parseInt(service.duration) % 60} м`
-                    else
-                        duration = `${Math.floor(parseInt(service.duration) / 60)} ч`
-                }
-              serviceElement.innerHTML = `
+      services.filter(service => service.idparents === category.id).forEach(service => {
+        const serviceElement = document.createElement('div');
+        let serviceComment = `<p class="service-description">Без комментария</p>`
+        if (service.comment) {
+          serviceComment = `<p class="service-description">${service.comment}</p>`
+        }
+        let price = `${currencyFormatter.format(parseInt(service.tarif))}`
+        if (!service.fixtarif) {
+          price = `от ${currencyFormatter.format(parseInt(service.tarif))}`
+        }
+        let duration = `${service.duration} мин`
+        if(parseInt(service.duration) >= 60){
+          if (parseInt(service.duration) % 60 !== 0)
+            duration = `${Math.floor(parseInt(service.duration) / 60)} ч ${parseInt(service.duration) % 60} м`
+          else
+            duration = `${Math.floor(parseInt(service.duration) / 60)} ч`
+        }
+        serviceElement.innerHTML = `
     <div class="service-item-wrapper">
         ${service.images ? `<div class='service-item-image'>
                               <img src='${service.images}' alt="Service Image" />
@@ -388,47 +402,51 @@
         <div class='service-item'>
             <div class="service-left">
                 <p class="service-title">${service.name}</p>
-                <p class="service-description">${service.comment}</p>
+${service.comment !== 'Без комментариев' ? `<p class="service-description">${service.comment}</p>` : '' }
+
             </div>
             <div class="service-right">
-                <div>
-                    <p class="service-price">${price}</p>
-                    <p class="service-duration">${duration}</p>
-                </div>
+
                 <a href="/booking/${service.id}/${localStorage.getItem('user_id')}">Записаться</a>
             </div>
+
         </div>
+                <div class="service_bottom">
+                    <p class="service-duration">${duration}</p>
+                    <p class="service-price">${price}</p>
+                </div>
     </div>
 `;
 
-              servicesElement.appendChild(serviceElement);
-            });
+        servicesElement.appendChild(serviceElement);
+      });
 
-            categoryElement.appendChild(titleElement);
-            categoryElement.appendChild(servicesElement);
-            container.appendChild(categoryElement);
-        });
-    }
-
-    function toggleCategory(categoryId) {
-        const categoryElement = document.getElementById(categoryId);
-        categoryElement.classList.toggle('expanded');
-        const svg = categoryElement.previousElementSibling.querySelector('svg');
-        svg.classList.toggle('rotate-svg');
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-        generateSwiperSlides();
-        generateServices();
-        const swiper = new Swiper('.swiper-container', {
-            spaceBetween: 20,
-            slidesPerView: 3.2,
-            navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev',
-            },
-        });
+      categoryElement.appendChild(titleElement);
+      categoryElement.appendChild(servicesElement);
+      container.appendChild(categoryElement);
     });
+  }
+
+  function toggleCategory(categoryId) {
+    const categoryElement = document.getElementById(categoryId);
+    categoryElement.classList.toggle('expanded');
+    const svg = categoryElement.previousElementSibling.querySelector('svg');
+    svg.classList.toggle('rotate-svg');
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    generateSwiperSlides();
+    generateServices();
+    const swiper = new Swiper('.swiper-container', {
+      spaceBetween: 8,
+      slidesPerView: 3.2,
+
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      },
+    });
+  });
 </script>
 </body>
 </html>

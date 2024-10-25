@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Telebon</title>
   <link rel="icon" type="image/x-icon" href="https://i.ibb.co/Q9RddYC/image.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
     <style>
@@ -12,6 +15,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+          font-family: "Inter", sans-serif;
         }
         body {
             font-family: Arial, sans-serif;
@@ -107,8 +111,10 @@
             text-transform: none;
         }
         .container {
-            max-width: 600px;
+            max-width: 630px;
             margin: 0 auto;
+          padding: 0 15px;
+          overflow: hidden;
             background: #fff;
         }
 
@@ -116,7 +122,7 @@
             width: 100%;
             height: 82px;
             margin-bottom: 20px;
-            overflow: hidden;
+            /*overflow: hidden;*/
         }
         .swiper-slide {
             display: flex;
@@ -128,13 +134,19 @@
             height: 82px;
             width: 60px;
             cursor: pointer;
+          transition: .3s ease;
+          &:hover{
+            box-shadow: 1px 2px 8px -2px #218CAC73;
+
+          }
         }
         .swiper-slide.active {
-            background-color: #00A3AD;
+            background-color: #008BAA;
             color: #fff;
             .time, .day_wrapper .day, .day_wrapper .date{
                 color: #ffffff;
             }
+
         }
         .day_wrapper {
             display: flex;
@@ -221,7 +233,8 @@
         .service{
             padding: 0 16px;
             background: #f3f3f3;
-            margin: 0 16px;
+
+            border-radius: 8px;
             .services{
                 &:first-child{
                     padding-top: 16px;
@@ -245,10 +258,11 @@
                 text-align: right;
                 font-weight: 400;
                 color: #888888;
+              margin-bottom: 16px;
             }
             .employee{
                 padding-top: 22px;
-                padding-bottom: 5px;
+                padding-bottom: 22px;
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
@@ -300,7 +314,7 @@
         }
         .summary_wrapper{
             display: flex;
-            margin: 16px;
+            margin: 48px 0 16px 0;
             height: 56px;
             align-items: center;
             justify-content: flex-end;
@@ -334,7 +348,7 @@
             }
         }
         .next_button{
-            margin: 0 16px;
+            margin: 0;
             height: 47px;
             text-decoration: none;
             background: #008BAA;
@@ -397,7 +411,7 @@
         <h3></h3>
         <div class="employee">
 
-            <p>Сотрудник <span>{{employee_fio}}</span></p>
+            <p>Сотрудник: <span>{{employee_fio}}</span></p>
             <a href="/employee/{{user_id}}" id="change-employee-button">Изменить</a>
         </div>
     </div>
@@ -503,8 +517,8 @@
         const currencyFormatter = new Intl.NumberFormat('ru-RU', {
             style: 'currency',
             currency: 'RUB',
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0
         });
 
         const isLinkEnabled = {{is_link_enabled}}
@@ -644,7 +658,7 @@
                     timeElement.classList.add('active');
                     const selectedTime = timeElement.querySelector('.time').textContent;
                     const endTime = addMinutesToTime(selectedTime, totalMinutes);
-                    employeeTimeElement.textContent = `Выбрано время: ${selectedTime} - ${endTime}`;
+                    employeeTimeElement.textContent = `${selectedTime} - ${endTime}`;
                 }
             });
         }
@@ -695,7 +709,7 @@
             document.querySelectorAll('.swiper-slide_time').forEach(el => el.classList.remove('active'));
             specificElement.classList.add('active');
             const endTime = addMinutesToTime(chosen_time, totalMinutes);
-            employeeTimeElement.textContent = `Выбрано время: ${chosen_time} - ${endTime}`;
+            employeeTimeElement.textContent = `${chosen_time} - ${endTime}`;
         }
 
         daySwiperWrapper.addEventListener('click', (event) => {
@@ -756,7 +770,7 @@
                 })
               updateButtonState();
 
-              employeeTimeElement.textContent = `Выбрано время: ${selectedTime} - ${endTime}`;
+              employeeTimeElement.textContent = `${selectedTime} - ${endTime}`;
             }
         });
 
@@ -830,8 +844,7 @@
         function updateHeaderTitle(date) {
             const monthYear = formatMonthYear(date);
             const title = monthYear.charAt(0).toUpperCase() + monthYear.slice(1)
-            console.log(`monthYear: ${title}`)
-            headerTitle.textContent = title;
+            headerTitle.textContent = title.split('г')[0];
         }
 
         function scrollToTime(time) {
