@@ -431,6 +431,7 @@ export class AppController {
             serv[0],
             record['date'],
           );
+        if (data === null) continue;
         new_employees.push({
           id: employee['id'],
           fio: employee['fio'],
