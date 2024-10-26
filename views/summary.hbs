@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/x-icon" href="https://i.ibb.co/Q9RddYC/image.png">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
@@ -305,7 +306,7 @@
             }
         }
     </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/inputmask/5.0.7/inputmask.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.7-beta.17/inputmask.min.js"></script>
 </head>
 <body>
 <div class="container">
@@ -479,31 +480,18 @@
                                        `;
             servicesContainer.appendChild(serviceElement);
         });
-        var phoneInput = document.querySelector('.phone')
-        phoneInput.addEventListener('input', function(event) {
-            if( !(event.key == 'ArrowLeft' || event.key == 'ArrowRight' || event.key == 'Backspace' || event.key == 'Tab')) { event.preventDefault() }
-            var mask = '+7 (111) 111-11-11'; // Задаем маску
+      const phoneInput = document.querySelector('.phone');
 
-            if (/[0-9\+\ \-\(\)]/.test(event.key)) {
-                // Здесь начинаем сравнивать this.value и mask
-                // к примеру опять же
-                var currentString = this.value;
-                var currentLength = currentString.length;
-                if (/[0-9]/.test(event.key)) {
-                    if (mask[currentLength] == '1') {
-                        this.value = currentString + event.key;
-                    } else {
-                        for (var i=currentLength; i<mask.length; i++) {
-                            if (mask[i] == '1') {
-                                this.value = currentString + event.key;
-                                break;
-                            }
-                            currentString += mask[i];
-                        }
-                    }
-                }
-            }
-        });
+      if (window.Inputmask) {
+        new window.Inputmask({
+          mask: "+7 999 999-99-99",
+          clearIncomplete: true,
+          showMaskOnHover: false,
+
+        }).mask(phoneInput);
+      } else {
+        console.error("Inputmask library is not loaded");
+      }
     });
 </script>
 </body>
