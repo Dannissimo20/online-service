@@ -306,7 +306,8 @@
             }
         }
     </style>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.7-beta.17/inputmask.min.js"></script>
+  {{!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.7-beta.17/inputmask.min.js"></script> --}}
+  <script src="https://unpkg.com/imask"></script>
 </head>
 <body>
 <div class="container">
@@ -359,7 +360,7 @@
             <input class="input_text" placeholder="Введите имя" type="text" id="name" name="name">
         </div>
         <div class="input_field input_field_end">
-            <input class="input_text phone" type="text" placeholder="Номер телефона" type="text" id="phone" name="phone">
+            <input class="input_text phone" type="text" placeholder="+7" type="text" id="phone" name="phone">
         </div>
 
         <div class="summary_wrapper">
@@ -394,6 +395,7 @@
         const cancelExitBtn = document.getElementById("cancelExit");
         const closeButton = document.querySelector('.header .exit');
         const nextButton = document.querySelector(".next_button");
+        const phoneInput = document.querySelector('.phone');
         //const url = 'http://localhost:3000';
         const url = "{{url}}";
 
@@ -419,30 +421,7 @@
         summaryTotalPrice.textContent = currencyFormatter.format(totalPrice);
         summaryTotalPrice1.textContent = currencyFormatter.format(totalPrice);
 
-        let isRunning = false;
-        nextButton.addEventListener("click", function() {
-            if (!isRunning)
-            {
-                update = false
-                isRunning = true
-                const response = fetch(`${url}/summary/confirm`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(
-                        {
-                            client_fio: document.getElementById('name').value,
-                            phone: document.getElementById('phone').value.replace(/[^\d]/g, ''),
-                            user_id: localStorage.getItem("user_id")
-                        }
-                    )
-                }).then(response => {
-                    console.log(`Response: ${response.url}`);
-                    window.location.href = response.url
-                })
-            }
-        });
+        
         closeButton.addEventListener('click', (event) => {
             event.preventDefault();
             modal.style.display = "flex";
@@ -480,9 +459,13 @@
                                        `;
             servicesContainer.appendChild(serviceElement);
         });
-      const phoneInput = document.querySelector('.phone');
+        
 
-      if (window.Inputmask) {
+        const phoneMask = new IMask(phoneInput, {
+            mask: "+{7} 900 000-00-00",
+        });
+
+      /*if (window.Inputmask) {
         new window.Inputmask({
           mask: "+7 999 999-99-99",
           clearIncomplete: true,
@@ -491,7 +474,31 @@
         }).mask(phoneInput);
       } else {
         console.error("Inputmask library is not loaded");
-      }
+      }*/
+        let isRunning = false;
+        nextButton.addEventListener("click", function() {
+            if (!isRunning)
+            {
+                update = false
+                isRunning = true
+                const response = fetch(`${url}/summary/confirm`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(
+                        {
+                            client_fio: document.getElementById('name').value,
+                            phone: document.getElementById('phone').value.replace(/[^\d]/g, ''),
+                            user_id: localStorage.getItem("user_id")
+                        }
+                    )
+                }).then(response => {
+                    console.log(`Response: ${response.url}`);
+                    window.location.href = response.url
+                })
+            }
+        });
     });
 </script>
 </body>

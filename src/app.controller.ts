@@ -80,7 +80,6 @@ export class AppController {
   @Render('index')
   async root(@Query('uniq') uniq: string) {
     const user_id = uuid();
-    // const apikey = await this.apikeyService.findOne(uniq)
     const filial = await this.appService.getFilialInfo(uniq);
     const dto = new RecordDto(user_id, null, uniq, filial.name);
     await this.recordService.create(dto);
@@ -310,8 +309,8 @@ export class AppController {
     //this.chosen_day = new Date(new Date(body.date).getFullYear(), new Date(body.date).getMonth(), new Date(body.date).getDate())
     await this.recordService.update(body.user_id, {
       date: body.date.split('T')[0],
-      start_time: null,
-      end_time: null,
+      // start_time: null,
+      // end_time: null,
     });
     const record = await this.recordService.findOne(body.user_id);
     const serv = await this.recordService.getService(body.user_id);
@@ -535,12 +534,14 @@ export class AppController {
       chosen_services: JSON.stringify(service),
       employee_fio: record['employee_fio'],
       filial_name: record['filial_name'],
-      day: day.toLocaleDateString('ru-RU', {
-        weekday: 'long',
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric',
-      }),
+      day: day
+        .toLocaleDateString('ru-RU', {
+          weekday: 'long',
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric',
+        })
+        .slice(0, -3),
       time_start: record['start_time'],
       duration: record['service_duration'],
       time_end: record['end_time'],
@@ -553,7 +554,7 @@ export class AppController {
 
   @Post('/summary/confirm')
   async summary_confirm(@Body() body: any, @Res() res: Response) {
-    if (body.phone === '' && body.client_fio === '')
+    if (body.phone.length !== 11 && body.client_fio === '')
       return res.redirect(`/summary/${body.user_id}`);
     const record = await this.recordService.findOne(body.user_id);
     if (new Date() >= new Date(`${record['date']}T${record['start_time']}`))
@@ -632,13 +633,13 @@ export class AppController {
 
   @Get('booking/back/:service_id/:user_id')
   async booking_back(@Param() params: any, @Res() res: Response) {
-    await this.recordService.update(params.user_id, {
-      employee_id: null,
-      employee_fio: null,
-      date: null,
-      start_time: null,
-      end_time: null,
-    });
+    // await this.recordService.update(params.user_id, {
+    //   employee_id: null,
+    //   employee_fio: null,
+    //   date: null,
+    //   start_time: null,
+    //   end_time: null,
+    // });
     return res.redirect(`/booking/${params.service_id}/${params.user_id}`);
   }
 

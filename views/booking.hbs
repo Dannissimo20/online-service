@@ -461,7 +461,7 @@
         const chosen_date = "{{chosen_date}}";
         const chosen_time = "{{chosen_time}}";
       let selectedDay = chosen_date;
-      let selectedTime1 = null;
+      let selectedTime1 = chosen_time;
 
       function updateButtonState() {
         if (selectedDay && selectedTime1) {
@@ -503,6 +503,11 @@
                 const tim = JSON.parse(data.times)
                 renderTimeSlider(tim)
                 updateButtonState();
+                if(chosen_time !== null && chosen_time !== undefined && chosen_time !== ""){
+                    const specificElement = document.querySelector(`[data-time="${chosen_time}"]`);
+                    document.querySelectorAll('.swiper-slide_time').forEach(el => el.classList.remove('active'));
+                    specificElement.classList.add('active');
+                }
             }
         });
 
