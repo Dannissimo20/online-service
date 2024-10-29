@@ -530,6 +530,9 @@ export class AppController {
       return res.redirect(`/booking/${record['service_id']}/${params.user_id}`);
     const day = new Date(record['date']);
     const service = await this.recordService.getService(params.user_id);
+    const hours = Math.floor(parseInt(record['service_duration']) / 60);
+    const minutes = parseInt(record['service_duration']) % 60;
+    const hours_exists = hours > 0;
     return {
       chosen_services: JSON.stringify(service),
       employee_fio: record['employee_fio'],
@@ -544,6 +547,9 @@ export class AppController {
         .slice(0, -3),
       time_start: record['start_time'],
       duration: record['service_duration'],
+      hours_exists: hours_exists,
+      duration_hours: hours,
+      duration_minutes: minutes,
       time_end: record['end_time'],
       service_id: service[0]['id'],
       user_id: params.user_id,
@@ -554,7 +560,7 @@ export class AppController {
 
   @Post('/summary/confirm')
   async summary_confirm(@Body() body: any, @Res() res: Response) {
-    if (body.phone.length !== 11 && body.client_fio === '')
+    if (body.phone.length !== 11 || body.client_fio === '')
       return res.redirect(`/summary/${body.user_id}`);
     const record = await this.recordService.findOne(body.user_id);
     if (new Date() >= new Date(`${record['date']}T${record['start_time']}`))

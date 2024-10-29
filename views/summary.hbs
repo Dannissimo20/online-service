@@ -334,9 +334,16 @@
         </a>
     </div>
     <div class="summary_date">
-        <h1 class="bold">{{day}}</h1>
-        <h1>{{time_start}} - {{time_end}} ({{duration}} мин.)</h1>
-        <h3 class="logo_title">{{filial_name}}</h3>
+        {{#if hours_exists}}
+            <h1 class="bold">{{day}}</h1>
+            <h1>{{time_start}} - {{time_end}} ({{duration_hours}}ч {{duration_minutes}} м)</h1>
+            <h3 class="logo_title">{{filial_name}}</h3>
+        {{else}}
+            <h1 class="bold">{{day}}</h1>
+            <h1>{{time_start}} - {{time_end}} ({{duration_minutes}} м)</h1>
+            <h3 class="logo_title">{{filial_name}}</h3>
+        {{/if}}
+        
 
     </div>
     <div class="service">
