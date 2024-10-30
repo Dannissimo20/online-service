@@ -101,8 +101,9 @@ export class AppController {
       filial.comment.trim() !== ''
     )
       address += `, ${filial.comment}`;
-    const filial_cover_exist = filial.coverphoto !== null;
-    const filial_logo_exist = filial.logo !== null;
+    const filial_cover_exist =
+      filial.coverphoto !== null && filial.coverphoto !== '';
+    const filial_logo_exist = filial.avatar !== null && filial.avatar !== '';
     return {
       categories: JSON.stringify(categories),
       services: JSON.stringify(services),
