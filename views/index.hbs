@@ -80,7 +80,9 @@
       border-radius: 50%;
       position: relative;
       overflow: hidden;
-
+      &.no_logo{
+        background: transparent;
+      }
       > img {
         object-fit: cover;
         position: absolute;
@@ -307,9 +309,13 @@
     <div class="header">
       <div class="logo">
         {{#if filial_logo_exist}}
-          <img src="{{filial_logo}}" alt="no-image"/>
+        <div class="logo">
+            <img src="{{filial_logo}}" class="no_logo" alt="no-image"/>
+        </div>
         {{else}}
-          <img src="https://i.ibb.co/Qc2Xb0p/Frame-2082.png" alt="Frame-2082" border="0">
+          <div class="no_logo">
+            <img src="https://i.ibb.co/Qc2Xb0p/Frame-2082.png" alt="Frame-2082" border="0">
+          </div>
         {{/if}}
       </div>
       <div class="header-title">
