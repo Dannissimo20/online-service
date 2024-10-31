@@ -630,6 +630,26 @@
           const specificElement = document.querySelector(`[data-time="${config.chosenTime}"]`);
           document.querySelectorAll('.swiper-slide_time').forEach(el => el.classList.remove('active'));
           specificElement.classList.add('active');
+          const endTime = addMinutesToTime(selectedTime1, totalMinutes);
+          elements.employeeTimeElement.textContent = `${selectedTime1} - ${endTime}`;
+        }
+        else{
+          const times = JSON.parse(data.times)
+          fetch(`${config.url}/booking/choose_time`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({user_id: localStorage.getItem('user_id'), time: times[0], duration: totalMinutes})
+          })
+          config.chosenTime = times[0]
+          selectedTime1 = times[0]
+          updateButtonState();
+          const specificElement = document.querySelector(`[data-time="${config.chosenTime}"]`);
+          document.querySelectorAll('.swiper-slide_time').forEach(el => el.classList.remove('active'));
+          specificElement.classList.add('active');
+          const endTime = addMinutesToTime(selectedTime1, totalMinutes);
+          elements.employeeTimeElement.textContent = `${selectedTime1} - ${endTime}`;
         }
       }
     });
@@ -680,7 +700,7 @@
     }
 
     if (config.chosenTime !== ""){
-      const [hours, minutes] = time.split(':');
+      const [hours, minutes] = config.chosenTime.split(':');
       console.log('chosen_time')
       console.log(config.chosenTime)
       const temp = new Date(0,0,0,parseInt(hours),parseInt(minutes));
@@ -720,11 +740,31 @@
               const timeSlots = JSON.parse(data.times);
               renderTimeSlider(timeSlots);
               updateButtonState();
+              config.chosenTime = "";
 
               if (config.chosenTime) {
                 const specificElement = document.querySelector(`[data-time="${config.chosenTime}"]`);
                 document.querySelectorAll('.swiper-slide_time').forEach(el => el.classList.remove('active'));
                 specificElement.classList.add('active');
+                elements.employeeTimeElement.textContent = `${selectedTime1} - ${endTime}`;
+              }
+              else{
+                const times = JSON.parse(data.times)
+                fetch(`${config.url}/booking/choose_time`, {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify({user_id: localStorage.getItem('user_id'), time: times[0], duration: totalMinutes})
+                })
+                config.chosenTime = times[0]
+                selectedTime1 = times[0]
+                updateButtonState();
+                const specificElement = document.querySelector(`[data-time="${config.chosenTime}"]`);
+                document.querySelectorAll('.swiper-slide_time').forEach(el => el.classList.remove('active'));
+                specificElement.classList.add('active');
+                const endTime = addMinutesToTime(selectedTime1, totalMinutes);
+                elements.employeeTimeElement.textContent = `${selectedTime1} - ${endTime}`;
               }
               if (timeSlots.length > 0) {
                 console.log(timeSlots, 'ejejeej')

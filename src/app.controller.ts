@@ -607,7 +607,7 @@ export class AppController {
     const record = await this.recordService.findOne(params.user_id);
     const day = new Date(record['date']);
     const filial = await this.appService.getFilialInfo(record['uniq']);
-    const filial_logo_exist = filial.logo !== null;
+    const filial_logo_exist = filial.avatar !== null && filial.avatar !== '';
     const service = await this.recordService.getService(params.user_id);
     //await this.recordService.delete(params.user_id)
     return {
