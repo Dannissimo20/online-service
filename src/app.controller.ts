@@ -134,7 +134,10 @@ export class AppController {
     );
     await this.recordService.update(params.user_id, rec);
     if (record['employee_id'] === null)
-      await this.recordService.update(params.user_id, {employee_id: "any", employee_fio: "Любой сотрудник"})
+      await this.recordService.update(params.user_id, {
+        employee_id: 'any',
+        employee_fio: 'Любой сотрудник',
+      });
     const employees = await this.appService.getEmployees(
       params.id,
       record['uniq'],
@@ -151,6 +154,11 @@ export class AppController {
       await this.recordService.update(params.user_id, {
         date: new Date().toISOString().slice(0, 10),
       });
+    let isOnline = false;
+    for (const employee of employees) {
+      if (employee['onlinerec']) isOnline = true;
+    }
+    if (!isOnline) res.redirect(`/error/2/${params.user_id}`);
     record = await this.recordService.findOne(params.user_id);
     const employee = record['employee_id'];
     let dates = null;
@@ -183,7 +191,7 @@ export class AppController {
         }
       } catch (e) {
         await this.recordService.delete(params.user_id);
-        return res.redirect(`/?uniq=${record['uniq']}`);
+        return res.redirect(`/error/1/${params.user_id}`);
       }
 
       dates = Array.from(uniqDates).sort(
@@ -323,36 +331,51 @@ export class AppController {
     );
     const response = {};
     const uniqTimes = new Set();
-    for (const employee of employees) {
+    if (record['employee_id'] === 'any') {
+      for (const employee of employees) {
+        const data = await this.appService.getTimes1(
+          employee['id'],
+          0,
+          record['uniq'],
+          serv[0],
+          body.date.split('T')[0],
+        );
+        if (data === null) continue;
+        response[employee['id']] = data[0];
+      }
+      for (const key in response) {
+        response[key]['times'].forEach((item) => {
+          uniqTimes.add(item);
+        });
+      }
+      const times = Array.from(uniqTimes).sort((a, b) => {
+        // Преобразование времени в минуты для сравнения
+        const timeToMinutes = (time: string) => {
+          const [hours, minutes] = time.split(':').map(Number);
+          return hours * 60 + minutes;
+        };
+
+        return timeToMinutes(a as string) - timeToMinutes(b as string);
+      });
+
+      return {
+        message: 'Success',
+        times: JSON.stringify(times),
+      };
+    } else {
       const data = await this.appService.getTimes1(
-        employee['id'],
+        record['employee_id'],
         0,
         record['uniq'],
         serv[0],
         body.date.split('T')[0],
       );
-      if (data === null) continue;
-      response[employee['id']] = data[0];
-    }
-    for (const key in response) {
-      response[key]['times'].forEach((item) => {
-        uniqTimes.add(item);
-      });
-    }
-    const times = Array.from(uniqTimes).sort((a, b) => {
-      // Преобразование времени в минуты для сравнения
-      const timeToMinutes = (time: string) => {
-        const [hours, minutes] = time.split(':').map(Number);
-        return hours * 60 + minutes;
+      const times = data[0]['times'];
+      return {
+        message: 'Success',
+        times: JSON.stringify(times),
       };
-
-      return timeToMinutes(a as string) - timeToMinutes(b as string);
-    });
-
-    return {
-      message: 'Success',
-      times: JSON.stringify(times),
-    };
+    }
   }
 
   @Post('/booking/choose_time')
@@ -401,10 +424,10 @@ export class AppController {
     //   employee_fio: chosen['fio'],
     // });
     // } else {
-      await this.recordService.update(body.user_id, {
-        start_time: body.time,
-        end_time: time_end,
-      });
+    await this.recordService.update(body.user_id, {
+      start_time: body.time,
+      end_time: time_end,
+    });
     // }
   }
 
@@ -578,7 +601,7 @@ export class AppController {
       });
     }
     const day = new Date(record['date']);
-    
+
     const hours = Math.floor(parseInt(record['service_duration']) / 60);
     const minutes = parseInt(record['service_duration']) % 60;
     const hours_exists = hours > 0;
@@ -613,7 +636,7 @@ export class AppController {
       return res.redirect(`/summary/${body.user_id}`);
     const record = await this.recordService.findOne(body.user_id);
     if (new Date() >= new Date(`${record['date']}T${record['start_time']}`))
-      return res.redirect(`/?uniq=${record.uniq}`);
+      return res.redirect(`/error/3/${body.user_id}`);
     let client: any = await this.appService.findClient(
       body.phone,
       record['uniq'],
@@ -669,6 +692,32 @@ export class AppController {
       uniq: record['uniq'],
       url: config.url,
     };
+  }
+
+  @Get('/error/:code_type/:user_id')
+  @Render('error')
+  async error(@Param() params: any) {
+    await this.recordService.delete(params.user_id);
+    switch (params.code_type) {
+      case '1':
+        return {
+          message: 'Нет распиcания',
+          comment:
+            'У сотрудника, оказывающего эту услугу, нет расписания. Выберите другую услугу или попробуйте позже',
+        };
+      case '2':
+        return {
+          message: 'Услугу нельзя оформить онлайн',
+          comment:
+            'Услугу оказывает сотрудник к которому нельзя записаться через онлайн-запись. Выберите другую услугу или запишитесь по телефону',
+        };
+      case '3':
+        return {
+          message: 'Выбранное время больше не доступно',
+          comment:
+            'Выбранное время больше не доступно для записи. Выберите другое время',
+        };
+    }
   }
 
   @Post('/exit')
