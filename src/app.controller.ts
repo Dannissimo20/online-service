@@ -133,6 +133,8 @@ export class AppController {
       serv['intervalonlinebooking'],
     );
     await this.recordService.update(params.user_id, rec);
+    if (record['employee_id'] === null)
+      await this.recordService.update(params.user_id, {employee_id: "any", employee_fio: "Любой сотрудник"})
     const employees = await this.appService.getEmployees(
       params.id,
       record['uniq'],
@@ -367,40 +369,43 @@ export class AppController {
       serv[0]['id'],
       record['uniq'],
     );
-    const response = {};
-    for (const employee of employees) {
-      const data = await this.appService.getTimes1(
-        employee['id'],
-        0,
-        record['uniq'],
-        serv[0],
-        record['date'],
-      );
-      if (data === null) continue;
-      response[employee['id']] = data[0];
-    }
-    if (record['employee_id'] === null) {
-      let chosen = null;
-      outerLoop: for (const key in response) {
-        for (const item of response[key]['times']) {
-          if (item === body.time) {
-            chosen = employees.find((employee) => employee['id'] === key);
-            break outerLoop;
-          }
-        }
-      }
+    // const response = {};
+    // for (const employee of employees) {
+    //   const data = await this.appService.getTimes1(
+    //     employee['id'],
+    //     0,
+    //     record['uniq'],
+    //     serv[0],
+    //     record['date'],
+    //   );
+    //   if (data === null) continue;
+    //   response[employee['id']] = data[0];
+    // }
+
+    // //const employee_times = response[record['employee_id']];
+
+    // //if (record['employee_id'] === null) {
+    // let chosen = null;
+    // outerLoop: for (const key in response) {
+    //   for (const item of response[key]['times']) {
+    //     if (item === body.time) {
+    //       chosen = employees.find((employee) => employee['id'] === key);
+    //       break outerLoop;
+    //     }
+    //   }
+    // }
+    // await this.recordService.update(body.user_id, {
+    //   start_time: body.time,
+    //   end_time: time_end,
+    //   employee_id: chosen['id'],
+    //   employee_fio: chosen['fio'],
+    // });
+    // } else {
       await this.recordService.update(body.user_id, {
         start_time: body.time,
         end_time: time_end,
-        employee_id: chosen['id'],
-        employee_fio: chosen['fio'],
       });
-    } else {
-      await this.recordService.update(body.user_id, {
-        start_time: body.time,
-        end_time: time_end,
-      });
-    }
+    // }
   }
 
   @Get('/employee/:user_id')
@@ -414,6 +419,13 @@ export class AppController {
         record['uniq'],
       );
       const new_employees = [];
+      new_employees.push({
+        id: 'any',
+        fio: 'Любой сотрудник',
+        position: null,
+        avatar: null,
+        status: 'Доступен',
+      });
       const response = {};
       for (const employee of employees) {
         let data = await this.appService.getTimes1(
@@ -527,10 +539,46 @@ export class AppController {
   @Render('summary')
   async summary(@Param() params: any, @Res() res: Response) {
     const record = await this.recordService.findOne(params.user_id);
+    const service = await this.recordService.getService(params.user_id);
+    const employees = await this.appService.getEmployees(
+      service[0]['id'],
+      record['uniq'],
+    );
     if (!record['date'] || !record['start_time'])
       return res.redirect(`/booking/${record['service_id']}/${params.user_id}`);
+    if (record['employee_id'] === 'any') {
+      const response = {};
+      for (const employee of employees) {
+        const data = await this.appService.getTimes1(
+          employee['id'],
+          0,
+          record['uniq'],
+          service[0],
+          record['date'],
+        );
+        if (data === null) continue;
+        response[employee['id']] = data[0];
+      }
+
+      //const employee_times = response[record['employee_id']];
+
+      //if (record['employee_id'] === null) {
+      let chosen = null;
+      outerLoop: for (const key in response) {
+        for (const item of response[key]['times']) {
+          if (item === record['start_time']) {
+            chosen = employees.find((employee) => employee['id'] === key);
+            break outerLoop;
+          }
+        }
+      }
+      await this.recordService.update(params.user_id, {
+        employee_id: chosen['id'],
+        employee_fio: chosen['fio'],
+      });
+    }
     const day = new Date(record['date']);
-    const service = await this.recordService.getService(params.user_id);
+    
     const hours = Math.floor(parseInt(record['service_duration']) / 60);
     const minutes = parseInt(record['service_duration']) % 60;
     const hours_exists = hours > 0;

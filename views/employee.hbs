@@ -169,7 +169,7 @@
         <h1>Выбрать сотрудника</h1>
     </div>
     <ul class="employee-list">
-        <li data-id="any" data-status="Доступен">
+        {{!-- <li data-id="any" data-status="Доступен">
             <div class="image_wrapper">
                 <svg class="selected-icon" width="10" height="10" viewBox="0 0 10 10" fill="none"
                      xmlns="http://www.w3.org/2000/svg">
@@ -188,7 +188,7 @@
             </div>
 
 
-        </li>
+        </li> --}}
     </ul>
 </div>
 
@@ -247,10 +247,11 @@
 
         employeeList.appendChild(li);
     });
-    console.log(employeeList)
+    console.log()
 
     employeeList.addEventListener('click', function (event) {
         const listItem = event.target.closest('li');
+        console.log(listItem)
         if (!listItem) return;
 
         const selectedId = listItem.dataset.id;
