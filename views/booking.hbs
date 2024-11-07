@@ -17,6 +17,7 @@
       box-sizing: border-box;
       font-family: "Inter", sans-serif;
     }
+
     body {
       font-family: Arial, sans-serif;
     }
@@ -218,6 +219,12 @@
             background: #ffffff;
             border-radius: 8px;
             color: #000000;
+          }
+          &.disabled {
+            border: 0.5px solid #0000000A;
+            background: #ebebeb;
+            border-radius: 8px;
+            color: #a8a8a8;
           }
         }
 
@@ -478,7 +485,6 @@
       times: {{{times}}}
     };
 
-    const today = new Date();
     let selectedDay = config.chosenDate;
     let selectedTime1 = config.chosenTime;
     const totalMinutes = calculateTotalDuration(config.services);
@@ -569,12 +575,25 @@
         }
       });
       const timeSwiper = new Swiper('.time-swiper', {
-        slidesPerView: 4,
+        slidesPerView: 3,
         spaceBetween: 10,
+        loop: false,
         on: {
+          init: () => {
+            const earliestTime = new Date(0, 0, 0, ...timeSlots[0].split(':').map(Number));
+
+            updateTabsBasedOnTime(earliestTime);
+
+          },
           slideChange: () => {
-            const activeSlideTime = timeSwiper.slides[timeSwiper.activeIndex].querySelector('.time').textContent;
-            updateActiveTab(activeSlideTime);
+            timeSwiper.update()
+            const activeSlide = timeSwiper.slides[timeSwiper.activeIndex];
+            const activeSlideTime = activeSlide ? activeSlide.querySelector('.time')?.textContent : null;
+            if (activeSlideTime) {
+              updateActiveTab(activeSlideTime);
+            } else {
+              console.error('No time found for active slide');
+            }
           }
         }
       });
@@ -665,16 +684,18 @@
     elements.summaryTotalPrice.textContent = formattedTotalPrice;
 
     function updateActiveTab(currentTime) {
-      const hour = parseInt(currentTime.split(':')[0], 10);
+      const [hour, minute] = currentTime.split(':').map(num => parseInt(num, 10));
+
       elements.tabs.forEach(tab => {
         tab.classList.remove('active');
-        if ((tab.dataset.time === 'morning' && hour < 12) ||
+        if ((tab.dataset.time === 'morning' && hour >= 6 && hour < 12) ||
           (tab.dataset.time === 'day' && hour >= 12 && hour < 16) ||
-          (tab.dataset.time === 'evening' && hour >= 16)) {
+          (tab.dataset.time === 'evening' && (hour >= 16 || (hour === 16 && minute > 0)))) {
           tab.classList.add('active');
         }
       });
     }
+
     renderTimeSlider(config.times);
     renderService()
 
@@ -701,8 +722,6 @@
 
     if (config.chosenTime !== ""){
       const [hours, minutes] = config.chosenTime.split(':');
-      console.log('chosen_time')
-      console.log(config.chosenTime)
       const temp = new Date(0,0,0,parseInt(hours),parseInt(minutes));
       const specificElement = document.querySelector(`[data-time="${config.chosenTime}"]`);
       document.querySelectorAll('.swiper-slide_time').forEach(el => el.classList.remove('active'));
@@ -710,6 +729,31 @@
       const endTime = addMinutesToTime(config.chosenTime, totalMinutes);
       elements.employeeTimeElement.textContent = `${config.chosenTime} - ${endTime}`;
     }
+
+    const daySwiper = new Swiper('.day-swiper', {
+      slidesPerView: 'auto',
+      spaceBetween: 10,
+      initialSlide: 0,
+      on: {
+        init: () => {
+          updateHeaderTitle(config.days[0]);
+        },
+        slideChange: () => {
+          const activeIndex = daySwiper.activeIndex;
+          updateHeaderTitle(config.days[activeIndex]);
+        }
+      }
+    });
+
+
+    const timeSwiper = new Swiper('.time-swiper', {
+      slidesPerView: 4,
+      spaceBetween: 10,
+      on: {
+        init: () => console.log('Time Swiper initialized')
+      }
+    });
+
 
     elements.daySwiperWrapper.addEventListener('click', (event) => {
       const timeElement = event.target.closest('.swiper-slide_date');
@@ -767,9 +811,16 @@
                 elements.employeeTimeElement.textContent = `${selectedTime1} - ${endTime}`;
               }
               if (timeSlots.length > 0) {
-                console.log(timeSlots, 'ejejeej')
+                if (timeSwiper && typeof timeSwiper.slideTo === 'function') {
+                  timeSwiper.slideTo(0);
+                } else {
+                  console.error("timeSwiper is not initialized correctly");
+                }
                 const earliestTime = new Date(0, 0, 0, ...timeSlots[0].split(':').map(Number));
+
                 updateTabsBasedOnTime(earliestTime);
+                timeSwiper.update();
+
               }
             }
           });
@@ -821,31 +872,7 @@
       }
     });
 
-    const daySwiper = new Swiper('.day-swiper', {
-      slidesPerView: 'auto',
-      spaceBetween: 10,
-      initialSlide: 0,
-      on: {
-        init: () => {
-          updateHeaderTitle(config.days[0]);
-          console.log('Day Swiper initialized');
-        },
-        slideChange: () => {
-          const activeIndex = daySwiper.activeIndex;
-          updateHeaderTitle(config.days[activeIndex]);
-          scrollToTime(new Date())
-        }
-      }
-    });
 
-    const timeSwiper = new Swiper('.time-swiper', {
-      slidesPerView: 4,
-      spaceBetween: 10,
-      initialSlide: config.times.findIndex(time => time.getHours() === today.getHours() && time.getMinutes() === today.getMinutes()),
-      on: {
-        init: () => console.log('Time Swiper initialized')
-      }
-    });
 
     function updateTabsBasedOnTime(time) {
       const hour = time.getHours();
@@ -872,17 +899,12 @@
       elements.headerTitle.textContent = title.split('г')[0];
     }
 
-    function scrollToTime(time) {
-      const slideIndex = config.times.findIndex(t => t.getTime() === time.getTime());
-      if (slideIndex !== -1) {
-        timeSwiper.slideTo(slideIndex);
-      }
-    }
+
     function initActiveTabAndScroll() {
       const now = config.chosenTime ? new Date(0, 0, 0, ...config.chosenTime.split(':').map(Number)) : new Date();
 
       updateTabsBasedOnTime(now);
-      scrollToTime(now);
+
     }
     initActiveTabAndScroll();
     timeSwiper.on('slideChange', () => {

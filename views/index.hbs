@@ -21,6 +21,7 @@
       box-shadow: none;
     }
 
+
     body {
       font-family: Arial, sans-serif;
       background: #F5F6F8;
@@ -307,14 +308,14 @@
   </div>
   <div class="wrapper">
     <div class="header">
-      <div class="logo">
+      <div >
         {{#if filial_logo_exist}}
-        <div class="logo">
-            <img src="{{filial_logo}}" class="no_logo" alt="no-image"/>
-        </div>
+          <div class="logo ">
+            <img src="{{filial_logo}}"  alt="no-image"/>
+          </div>
         {{else}}
-          <div class="no_logo">
-            <img src="https://i.ibb.co/Qc2Xb0p/Frame-2082.png" alt="Frame-2082" border="0">
+          <div class="logo no_logo">
+            <img src="https://i.ibb.co/ZV2nM0w/Frame-2082-1.png" alt="Frame-2082" />
           </div>
         {{/if}}
       </div>
