@@ -697,7 +697,7 @@ export class AppController {
   @Get('/error/:code_type/:user_id')
   @Render('error')
   async error(@Param() params: any) {
-    // await this.recordService.delete(params.user_id);
+    await this.recordService.update(params.user_id, { employee_id: null });
     switch (params.code_type) {
       case '1':
         return {
